@@ -1,33 +1,43 @@
 package plate;
-
 import bacteria.Bacteria;
 import bacteria.Direction;
+import plate.Field;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-
-public class Plate{
+public class Plate {
+    private List<Bacteria> aliveBacterias;
     private int width;
     private int height;
     private Field[][] fields;
-    private ArrayList<Bacteria> aliveBacterias;
-    private long foodLeft = 0;
+    private List<Float> amtibiotics;
+    private  List<Bacteria> bacteriasToAdd;
 
-    public long getFoodLeft() {
-        return foodLeft;
-    }
 
     public Plate(int width, int height) {
+        this.aliveBacterias = new ArrayList<>();
         this.width = width;
         this.height = height;
         this.fields = new Field[width][height];
-        this.aliveBacterias = new ArrayList<>();
+        this.amtibiotics = amtibiotics;
+        this.bacteriasToAdd = new ArrayList<>();
 
-        for (int i = 0; i < this.width; i++) {
-            for (int j = 0; j < this.height; j++) {
-                this.fields[i][j] = new Field();} }
+
+        for (int i = 0; i < this.width; i++){
+            for (int j = 0; j < this.height; j++){
+                this.fields[i][j] = new Field();
+            }
+        }
+        for (int i = 0; i < 1000; i++){
+            int x = 0;
+            int y = ThreadLocalRandom.current().nextInt(height);
+            Bacteria bacteria = new Bacteria(x, y);
+            fields[x][y].setBacteria(bacteria);
+            aliveBacterias.add(bacteria);
+        }
         // 2 area
         for (int i = 100; i < 220; i++) {
             for (int j = 0; j < this.height; j++) {
@@ -43,137 +53,105 @@ public class Plate{
         //5 area
         for (int i = 440; i < 560; i++) {
             for (int j = 0; j < this.height; j++) { this.fields[i][j].setAntibiotic(0.9f); } }
-        //4 area
-        for (int i = 560; i < 670; i++) {
-            for (int j = 0; j < this.height; j++) {
-                this.fields[i][j].setAntibiotic(1.9f); } }
-        //3 area
-        for (int i = 670; i < 780; i++) {
-            for (int j = 0; j < this.height; j++) {
-                this.fields[i][j].setAntibiotic(1.9f); } }
-        //2 area
-        for (int i = 780; i < 890; i++) {
-            for (int j = 0; j < this.height; j++) {
-                this.fields[i][j].setAntibiotic(1.09f); } }
-        //start area right
-        for (int i = 890; i < 1000; i++) {
-            for (int j = 0; j < this.height; j++) {
-                this.fields[i][j].setAntibiotic(1.2f); } }
-        generateFirstGenerationOfBacterias();
     }
 
-    private void generateFirstGenerationOfBacterias() {
 
-     for (int i = 0; i < 50; i++) {
-            int y = ThreadLocalRandom.current().nextInt(350);
-            int x = 0;
-            Bacteria bacteria = new Bacteria(x, y);
-            fields[x][y].setBacteria(bacteria);
-       }
-        for (int i = 0; i <  5; i++) {
-           int y = ThreadLocalRandom.current().nextInt(350);
-           int x = 999;
-            Bacteria bacteria = new Bacteria(x, y);
-            fields[x][y].setBacteria(bacteria);
-        }
+    private boolean isFieldEmpty(int x, int y){
+        if(x < 0 || x > width - 1 || y < 0 || y > height -1){ return false; }
+        if(fields[x][y].getBacteria() == null) { return true; }
+        else return false;
     }
 
-    private boolean isFieldEmpty(int x, int y) {
-        if (x < 0 || x > width - 1 || y < 0 || y > height - 1) { return false; }
-        if (fields[x][y].getBacteria() == null) { return true; } else return false; }
+    public void update(){
+        aliveBacterias.removeIf(x -> !x.isAlive());
+        aliveBacterias.addAll(bacteriasToAdd);
+        bacteriasToAdd.clear();
 
-    public void update() {
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                if (fields[i][j].getBacteria() != null) {
-                    List<Direction> availableDirections = getDirections(fields[i][j]);
+        aliveBacterias.forEach(bacteria -> {
 
-                    if (fields[i][j].getBacteria().canReproduce() && !availableDirections.isEmpty()) {
-                        addBacteriasChild(i, j, availableDirections); }
+            List<Direction> avalibleDirections = new ArrayList<>();
+            prepareAvailableDirectionsForBacteria(bacteria, avalibleDirections);
 
-                    if (!availableDirections.isEmpty()) {
-                        move(i, j, availableDirections); }
-
-                    if ((fields[i][j].getBacteria().getResistance() > fields[i][j].getAntibiotic())) {
-                        fields[i][j].getBacteria().setAlive(true);
-                    } else { fields[i][j].getBacteria().setAlive(false); }
-
-                    //if (((fields[i][j].getBacteria().getMovesWithoutFood() >= 10000) || !(fields[i][j].getBacteria().isAlive()))) {
-                    if (!(fields[i][j].getBacteria().isAlive())) {
-                            fields[i][j].setBacteria(null);
+            //reproduce
+            if(bacteria.canReproduce()){
+                bacteriaReproduce(bacteria, avalibleDirections);
+            }//move and eat
+            else {
+                if (!avalibleDirections.isEmpty()) {
+                    int direction = new Random().nextInt(avalibleDirections.size());
+                    switch (avalibleDirections.get(direction)) {
+                        case UP:
+                            bacteria.setY(bacteria.getY() - 1);
+                            fields[bacteria.getX()][bacteria.getY()].setBacteria(bacteria);
+                            fields[bacteria.getX()][bacteria.getY() + 1].setBacteria(null);
+                            bacteria.eatFood(fields[bacteria.getX()][bacteria.getY()]);
+                            break;
+                        case LEFT:
+                            bacteria.setX(bacteria.getX() - 1);
+                            fields[bacteria.getX()][bacteria.getY()].setBacteria(bacteria);
+                            fields[bacteria.getX() + 1][bacteria.getY()].setBacteria(null);
+                            bacteria.eatFood(fields[bacteria.getX()][bacteria.getY()]);
+                            break;
+                        case RIGHT:
+                            bacteria.setX(bacteria.getX() + 1);
+                            fields[bacteria.getX()][bacteria.getY()].setBacteria(bacteria);
+                            fields[bacteria.getX() - 1][bacteria.getY()].setBacteria(null);
+                            bacteria.eatFood(fields[bacteria.getX()][bacteria.getY()]);
+                            break;
+                        case DOWN:
+                            bacteria.setY(bacteria.getY() + 1);
+                            fields[bacteria.getX()][bacteria.getY()].setBacteria(bacteria);
+                            fields[bacteria.getX()][bacteria.getY() - 1].setBacteria(null);
+                            bacteria.eatFood(fields[bacteria.getX()][bacteria.getY()]);
+                            break;
                     }
                 }
             }
+            if(fields[bacteria.getX()][bacteria.getY()].getAntibiotic() > bacteria.getResistance()){
+                bacteria.setAlive(false);
+            }
+        });
+    }
+
+    private void bacteriaReproduce(Bacteria bacteria, List<Direction> avalibleDirections) {
+        if (!avalibleDirections.isEmpty()) {
+            int direction = new Random().nextInt(avalibleDirections.size());
+            Bacteria tempBacteria = null;
+            switch (avalibleDirections.get(direction)) {
+                case UP:
+                    tempBacteria = new Bacteria(bacteria.getX(), bacteria.getY() - 1);
+                    break;
+                case LEFT:
+                    tempBacteria = new Bacteria(bacteria.getX() - 1, bacteria.getY());
+                    break;
+                case RIGHT:
+                    tempBacteria = new Bacteria(bacteria.getX() + 1, bacteria.getY());
+                    break;
+                case DOWN:
+                    tempBacteria = new Bacteria(bacteria.getX(), bacteria.getY() + 1);
+                    break;
+            }
+            fields[tempBacteria.getX()][tempBacteria.getY()].setBacteria(tempBacteria);
+            bacteriasToAdd.add(tempBacteria);
         }
     }
 
-    private void addBacteriasChild(int i, int j, List<Direction> directionList) {
-        Bacteria tempBacteria = new Bacteria(i, j, fields[i][j].getBacteria().calculateChildsResistance());
-        int direction = ThreadLocalRandom.current().nextInt(directionList.size());
-        switch (directionList.get(direction)) {
-            case UP:
-                if (isFieldEmpty(i, j - 1))
-                    fields[i][j - 1].setBacteria(tempBacteria);
-                break;
-            case LEFT:
-                if (isFieldEmpty(i - 1, j))
-                    fields[i - 1][j].setBacteria(tempBacteria);
-                break;
-            case RIGHT:
-                if (isFieldEmpty(i + 1, j))
-                    fields[i + 1][j].setBacteria(tempBacteria);
-                break;
-            case DOWN:
-                if (isFieldEmpty(i, j + 1))
-                    fields[i][j + 1].setBacteria(tempBacteria);
-                break;
-        }
-        if (fields[i][j].getBacteria().isAlive())
-            aliveBacterias.add(fields[i][j].getBacteria());
+    private void prepareAvailableDirectionsForBacteria(Bacteria bacteria, List<Direction> avalibleDirections) {
+        if(isFieldEmpty(bacteria.getX(), bacteria.getY() - 1)){
+            avalibleDirections.add(Direction.UP); }
+        if(isFieldEmpty(bacteria.getX() + 1, bacteria.getY())) {
+            avalibleDirections.add(Direction.RIGHT); }
+        if(isFieldEmpty(bacteria.getX(), bacteria.getY() + 1)) {
+            avalibleDirections.add(Direction.DOWN); }
+        if(isFieldEmpty(bacteria.getX() - 1, bacteria.getY())) {
+            avalibleDirections.add(Direction.LEFT); }
     }
 
-    private void move(int i, int j, List<Direction> avalibleDirections) {
-        int direction = ThreadLocalRandom.current().nextInt(avalibleDirections.size());
-        switch (avalibleDirections.get(direction)) {
-            case UP:
-                fields[i][j].getBacteria().setY(fields[i][j].getBacteria().getY()-1);
-                eat(i,j);
-                break;
-            case LEFT:
-                fields[i][j].getBacteria().setX(fields[i][j].getBacteria().getX()-1);
-
-                eat(i,j);
-                break;
-            case RIGHT:
-                fields[i][j].getBacteria().setX(fields[i][j].getBacteria().getX() + 1);
-                eat(i,j);
-                break;
-            case DOWN:
-                fields[i][j].getBacteria().setY(fields[i][j].getBacteria().getY()+1);
-                eat(i,j);
-                break;
-        }
+    public Field[][] getFields() {
+        return fields;
     }
 
-    private void eat(int i, int j){
-        if (fields[i][j].getFood() >= 0){
-            fields[i][j].getBacteria().eatFood(fields[fields[i][j].getBacteria().getX()][fields[i][j].getBacteria().getY()]);
-            fields[i][j].removeFood(); } }
-
-    private List<Direction> getDirections(Field field) {
-        List<Direction> avalibleDirections = new ArrayList<>();
-        if(field.getBacteria() != null){
-            if (isFieldEmpty(field.getBacteria().getX(), field.getBacteria().getY() - 1)) {
-                avalibleDirections.add(Direction.UP); }
-            if (isFieldEmpty(field.getBacteria().getX() + 1, field.getBacteria().getY())) {
-                avalibleDirections.add(Direction.RIGHT); }
-            if (isFieldEmpty(field.getBacteria().getX(), field.getBacteria().getY() + 1)) {
-                avalibleDirections.add(Direction.DOWN); }
-            if (isFieldEmpty(field.getBacteria().getX() - 1, field.getBacteria().getY())) {
-                avalibleDirections.add(Direction.LEFT); }
-        }
-        return avalibleDirections;
+    public List<Bacteria> getAliveBacterias() {
+        return aliveBacterias;
     }
-
-    public Field[][] getFields() { return fields; }
 }

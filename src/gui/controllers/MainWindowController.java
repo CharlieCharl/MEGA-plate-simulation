@@ -60,9 +60,6 @@ public class MainWindowController extends AnimationTimer {
                 Field field = fields[i][j];
                 if (field.getBacteria() != null) {
                     if (field.getBacteria().isAlive()) {
-                        // field.getBacteria().draw(gc);
-                        field = fields[i][j];
-                       // float alpha = field.getFood();
                         gc.setFill(Color.rgb(255, 255, 255, 1));
                         gc.fillRect(i, j, 1, 1);
                     }
@@ -75,7 +72,10 @@ public class MainWindowController extends AnimationTimer {
 
     @Override
     public void handle(long now) {
+        stop();
         updateCanvas();
+        start();
+        System.out.println(        simulation.getPlate().getAliveBacterias().size());
 //        System.out.println("Alive " + alive);
 //        System.out.println("Dead " +dead);
 //        System.out.println(food);

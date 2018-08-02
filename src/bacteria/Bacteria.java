@@ -16,8 +16,9 @@ public class Bacteria{
     public Bacteria(int x, int y) {
         this.x = x;
         this.y = y;
-        this.resistance = ThreadLocalRandom.current().nextDouble() /2 ;
-        this.hunger = 1;
+        this.resistance = 0.5;
+      //  this.resistance = ThreadLocalRandom.current().nextDouble() /2 ;
+        this.hunger = 10;
     }
 
     public double getResistance() {
@@ -28,12 +29,12 @@ public class Bacteria{
         this.x = x;
         this.y = y;
         this.resistance = calculateChildsResistance();
-        this.hunger = 1;
+        this.hunger = 10;
     }
 
     public boolean canReproduce(){
         if(this.hunger == 0){
-            this.hunger = 1;
+            this.hunger = 10;
             return true;
         }
         return false;

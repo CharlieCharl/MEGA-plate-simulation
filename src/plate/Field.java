@@ -11,7 +11,7 @@ public class Field {
 
     public Field() {
         this.bacteria = null;
-        this.food = 100;
+        this.food = 10;
         this.antibiotic = 0.1f;
     }
 
