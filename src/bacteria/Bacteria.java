@@ -1,15 +1,7 @@
-package simulation;
+package bacteria;
 
-import javafx.scene.Node;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.effect.BoxBlur;
-import javafx.scene.effect.Effect;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
+import plate.Field;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Bacteria{
@@ -57,14 +49,7 @@ public class Bacteria{
             field.removeFood();
         } else this.movesWithoutFood++;
     }
-/*
-    public void draw(GraphicsContext gtx) {
-        if (this.isAlive()){
-            gtx.setFill(Color.rgb(255, 255, 255,  1));
-            gtx.fillRect(getX(),getY(),1,1);
-        }
-    }
-*/
+
     public int getMovesWithoutFood() {
         return movesWithoutFood;
     }

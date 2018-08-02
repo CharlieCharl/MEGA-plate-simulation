@@ -1,4 +1,4 @@
-package simulation;
+package bacteria;
 
 
 public enum Direction {

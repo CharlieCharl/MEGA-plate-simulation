@@ -1,8 +1,6 @@
 package simulation;
 
-import javafx.animation.AnimationTimer;
-import simulation.Plate;
-import java.util.Arrays;
+import plate.Plate;
 
 public class Simulation extends Thread {
     private Plate plate;

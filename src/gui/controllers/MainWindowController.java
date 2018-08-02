@@ -1,13 +1,12 @@
 package gui.controllers;
 
 import javafx.animation.AnimationTimer;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 
 import javafx.scene.paint.Color;
-import simulation.Field;
+import plate.Field;
 import simulation.Simulation;
 
 public class MainWindowController extends AnimationTimer {

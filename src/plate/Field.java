@@ -1,8 +1,7 @@
-package simulation;
+package plate;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import bacteria.Bacteria;
+import bacteria.Direction;
 
 public class Field {
 
