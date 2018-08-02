@@ -75,7 +75,7 @@ public class MainWindowController extends AnimationTimer {
         stop();
         updateCanvas();
         start();
-        System.out.println(        simulation.getPlate().getAliveBacterias().size());
+       // System.out.println(        simulation.getPlate().getAliveBacterias().size());
 //        System.out.println("Alive " + alive);
 //        System.out.println("Dead " +dead);
 //        System.out.println(food);

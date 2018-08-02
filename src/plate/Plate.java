@@ -31,15 +31,9 @@ public class Plate {
                 this.fields[i][j] = new Field();
             }
         }
-        for (int i = 0; i < 1000; i++){
-            int x = 0;
-            int y = ThreadLocalRandom.current().nextInt(height);
-            Bacteria bacteria = new Bacteria(x, y);
-            fields[x][y].setBacteria(bacteria);
-            aliveBacterias.add(bacteria);
-        }
+
         // 2 area
-        for (int i = 100; i < 220; i++) {
+        for (int i = 110; i < 220; i++) {
             for (int j = 0; j < this.height; j++) {
                 this.fields[i][j].setAntibiotic(0.3f); } }
         // 3 area
@@ -49,10 +43,42 @@ public class Plate {
         //4 area
         for (int i = 330; i < 440; i++) {
             for (int j = 0; j < this.height; j++) {
-                this.fields[i][j].setAntibiotic(0.6f); } }
+                this.fields[i][j].setAntibiotic(0.0f); } }
         //5 area
         for (int i = 440; i < 560; i++) {
             for (int j = 0; j < this.height; j++) { this.fields[i][j].setAntibiotic(0.9f); } }
+        //4 area
+        for (int i = 560; i < 670; i++) {
+            for (int j = 0; j < this.height; j++) {
+                this.fields[i][j].setAntibiotic(0.0f); } }
+        //3 area
+        for (int i = 670; i < 780; i++) {
+            for (int j = 0; j < this.height; j++) {
+                this.fields[i][j].setAntibiotic(0.0f); } }
+        //2 area
+        for (int i = 780; i < 890; i++) {
+            for (int j = 0; j < this.height; j++) {
+                this.fields[i][j].setAntibiotic(0.09f); } }
+        //start area right
+        for (int i = 890; i < 1000; i++) {
+            for (int j = 0; j < this.height; j++) {
+                this.fields[i][j].setAntibiotic(0.2f); } }
+                generateFirstGenerationOfBacterias();
+    }
+
+    private void generateFirstGenerationOfBacterias() {
+        for (int i = 0; i < 50; i++) {
+            int y = ThreadLocalRandom.current().nextInt(350);
+            int x = 0;
+            Bacteria bacteria = new Bacteria(x, y);
+            aliveBacterias.add(bacteria);
+            fields[x][y].setBacteria(bacteria); }
+        for (int i = 0; i <  5; i++) {
+            int y = ThreadLocalRandom.current().nextInt(350);
+            int x = 999;
+            Bacteria bacteria = new Bacteria(x, y);
+            aliveBacterias.add(bacteria);
+            fields[x][y].setBacteria(bacteria); }
     }
 
 
