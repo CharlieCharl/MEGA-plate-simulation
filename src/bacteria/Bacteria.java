@@ -16,20 +16,22 @@ public class Bacteria{
     public Bacteria(int x, int y) {
         this.x = x;
         this.y = y;
-        this.resistance = 0.5;
-      //  this.resistance = ThreadLocalRandom.current().nextDouble() /2 ;
+        this.resistance = 0.01f;
         this.hunger = 10;
+    }
+
+    public Bacteria(Bacteria parent){
+        this.x = parent.getX();
+        this.y = parent.getY();
+        resistance = parent.getResistance() + (2 * ThreadLocalRandom.current().nextDouble(-0.01f,0.01f) );
+    }
+
+    private void evolve(){
+        this.resistance += 0.0000001f;
     }
 
     public double getResistance() {
         return resistance;
-    }
-
-    public Bacteria(int x, int y, double resistance){
-        this.x = x;
-        this.y = y;
-        this.resistance = calculateChildsResistance();
-        this.hunger = 10;
     }
 
     public boolean canReproduce(){
@@ -38,10 +40,6 @@ public class Bacteria{
             return true;
         }
         return false;
-    }
-
-    public double calculateChildsResistance(){
-        return ThreadLocalRandom.current().nextDouble() /2 + 0.02f;
     }
 
     public void eatFood(Field field){

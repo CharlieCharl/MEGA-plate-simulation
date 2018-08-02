@@ -15,6 +15,8 @@ public class Plate {
     private Field[][] fields;
     private List<Float> amtibiotics;
     private  List<Bacteria> bacteriasToAdd;
+    private List<Bacteria> deadbacterias;
+    private long toEvolve;
 
 
     public Plate(int width, int height) {
@@ -24,56 +26,69 @@ public class Plate {
         this.fields = new Field[width][height];
         this.amtibiotics = amtibiotics;
         this.bacteriasToAdd = new ArrayList<>();
-
+        this.deadbacterias = new ArrayList<>();
 
         for (int i = 0; i < this.width; i++){
             for (int j = 0; j < this.height; j++){
-                this.fields[i][j] = new Field();
-            }
-        }
+                this.fields[i][j] = new Field(); } }
 
-        // 2 area
-        for (int i = 110; i < 220; i++) {
-            for (int j = 0; j < this.height; j++) {
-                this.fields[i][j].setAntibiotic(0.3f); } }
-        // 3 area
-        for (int i = 220; i < 330; i++) {
-            for (int j = 0; j < this.height; j++) {
-                this.fields[i][j].setAntibiotic(0.45f); } }
-        //4 area
-        for (int i = 330; i < 440; i++) {
-            for (int j = 0; j < this.height; j++) {
-                this.fields[i][j].setAntibiotic(0.0f); } }
-        //5 area
-        for (int i = 440; i < 560; i++) {
-            for (int j = 0; j < this.height; j++) { this.fields[i][j].setAntibiotic(0.9f); } }
-        //4 area
-        for (int i = 560; i < 670; i++) {
-            for (int j = 0; j < this.height; j++) {
-                this.fields[i][j].setAntibiotic(0.0f); } }
-        //3 area
-        for (int i = 670; i < 780; i++) {
-            for (int j = 0; j < this.height; j++) {
-                this.fields[i][j].setAntibiotic(0.0f); } }
-        //2 area
-        for (int i = 780; i < 890; i++) {
-            for (int j = 0; j < this.height; j++) {
-                this.fields[i][j].setAntibiotic(0.09f); } }
-        //start area right
-        for (int i = 890; i < 1000; i++) {
-            for (int j = 0; j < this.height; j++) {
-                this.fields[i][j].setAntibiotic(0.2f); } }
-                generateFirstGenerationOfBacterias();
+        setAntibioticArea(0.00f,1);
+        setAntibioticArea(0.45f,2);
+        setAntibioticArea(0.65f,3);
+        setAntibioticArea(0.75f,4);
+        setAntibioticArea(0.95f,5);
+        generateFirstGenerationOfBacterias();
     }
 
+   private void setAntibioticArea(float antibioticValue, int area){
+        switch (area){
+            case 1:
+                for (int i = 0; i < 110; i++) {
+                    for (int j = 0; j < this.height; j++) { this.fields[i][j].setAntibiotic(antibioticValue); } }
+
+                for (int i = 890; i < 1000; i++) {
+                    for (int j = 0; j < this.height; j++) { this.fields[i][j].setAntibiotic(antibioticValue); } }
+
+                    break;
+            case 2:
+                for (int i = 110; i < 220; i++) {
+                    for (int j = 0; j < this.height; j++) { this.fields[i][j].setAntibiotic(antibioticValue); } }
+
+                for (int i = 780; i < 890; i++) {
+                    for (int j = 0; j < this.height; j++) { this.fields[i][j].setAntibiotic(antibioticValue); } }
+
+                    break;
+            case 3:
+                for (int i = 220; i < 330; i++) {
+                    for (int j = 0; j < this.height; j++) { this.fields[i][j].setAntibiotic(antibioticValue); } }
+
+                for (int i = 670; i < 780; i++) {
+                    for (int j = 0; j < this.height; j++) { this.fields[i][j].setAntibiotic(antibioticValue); } }
+
+                    break;
+            case 4:
+                for (int i = 330; i < 440; i++) {
+                    for (int j = 0; j < this.height; j++) { this.fields[i][j].setAntibiotic(antibioticValue); } }
+
+                for (int i = 560; i < 670; i++) {
+                    for (int j = 0; j < this.height; j++) { this.fields[i][j].setAntibiotic(antibioticValue); } }
+                    break;
+            case 5:
+                for (int i = 440; i < 560; i++) {
+                    for (int j = 0; j < this.height; j++) { this.fields[i][j].setAntibiotic(antibioticValue); } }
+                    break;
+        }
+    }
+
+
     private void generateFirstGenerationOfBacterias() {
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 10; i++) {
             int y = ThreadLocalRandom.current().nextInt(350);
             int x = 0;
             Bacteria bacteria = new Bacteria(x, y);
             aliveBacterias.add(bacteria);
             fields[x][y].setBacteria(bacteria); }
-        for (int i = 0; i <  5; i++) {
+        for (int i = 0; i <  10; i++) {
             int y = ThreadLocalRandom.current().nextInt(350);
             int x = 999;
             Bacteria bacteria = new Bacteria(x, y);
@@ -94,7 +109,6 @@ public class Plate {
         bacteriasToAdd.clear();
 
         aliveBacterias.forEach(bacteria -> {
-
             List<Direction> avalibleDirections = new ArrayList<>();
             prepareAvailableDirectionsForBacteria(bacteria, avalibleDirections);
 
@@ -134,7 +148,10 @@ public class Plate {
                 }
             }
             if(fields[bacteria.getX()][bacteria.getY()].getAntibiotic() > bacteria.getResistance()){
+                System.out.println(bacteria);
                 bacteria.setAlive(false);
+                deadbacterias.add(bacteria);
+               // fields[bacteria.getX()][bacteria.getY()].setBacteria(null);
             }
         });
     }
@@ -145,16 +162,24 @@ public class Plate {
             Bacteria tempBacteria = null;
             switch (avalibleDirections.get(direction)) {
                 case UP:
-                    tempBacteria = new Bacteria(bacteria.getX(), bacteria.getY() - 1);
+                    //tempBacteria = new Bacteria(bacteria.getX(), bacteria.getY() - 1);
+                    tempBacteria = new Bacteria(bacteria);
+                    tempBacteria.setY(bacteria.getY() - 1);
                     break;
                 case LEFT:
-                    tempBacteria = new Bacteria(bacteria.getX() - 1, bacteria.getY());
+                   // tempBacteria = new Bacteria(bacteria.getX() - 1, bacteria.getY());
+                    tempBacteria = new Bacteria(bacteria);
+                    tempBacteria.setX(bacteria.getX() - 1);
                     break;
                 case RIGHT:
-                    tempBacteria = new Bacteria(bacteria.getX() + 1, bacteria.getY());
+                    //tempBacteria = new Bacteria(bacteria.getX() + 1, bacteria.getY());
+                    tempBacteria = new Bacteria(bacteria);
+                    tempBacteria.setX(bacteria.getX() + 1);
                     break;
                 case DOWN:
-                    tempBacteria = new Bacteria(bacteria.getX(), bacteria.getY() + 1);
+                  //  tempBacteria = new Bacteria(bacteria.getX(), bacteria.getY() + 1);
+                    tempBacteria = new Bacteria(bacteria);
+                    tempBacteria.setY(bacteria.getY() + 1);
                     break;
             }
             fields[tempBacteria.getX()][tempBacteria.getY()].setBacteria(tempBacteria);

@@ -14,9 +14,7 @@ public class Simulation extends AnimationTimer {
 
     @Override
     public void handle(long now) {
-        stop();
         plate.update();
-        start();
     }
 
 //    @Override

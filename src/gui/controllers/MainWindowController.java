@@ -2,9 +2,13 @@ package gui.controllers;
 
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
+import javafx.scene.CacheHint;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 
+import javafx.scene.effect.Bloom;
+import javafx.scene.effect.BoxBlur;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.paint.Color;
 import plate.Field;
 import simulation.Simulation;
@@ -24,6 +28,7 @@ public class MainWindowController extends AnimationTimer {
 
     public void init(Simulation simulation) {
         this.simulation = simulation;
+
 //        gc.setFill(Color.BLACK);
 //        gc.fillRect(0,0, 110,350);
 
@@ -49,12 +54,14 @@ public class MainWindowController extends AnimationTimer {
     }
 
     private void updateCanvas() {
+
         alive = 0;
         dead = 0;
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         Field[][] fields = simulation.getPlate().getFields();
 
+       // gc.setEffect(new BoxBlur());
         for (int i = 0; i < canvas.getWidth(); i++) {
             for (int j = 0; j < canvas.getHeight(); j++) {
                 Field field = fields[i][j];
@@ -72,10 +79,8 @@ public class MainWindowController extends AnimationTimer {
 
     @Override
     public void handle(long now) {
-        stop();
         updateCanvas();
-        start();
-       // System.out.println(        simulation.getPlate().getAliveBacterias().size());
+         System.out.println(        simulation.getPlate().getAliveBacterias().size());
 //        System.out.println("Alive " + alive);
 //        System.out.println("Dead " +dead);
 //        System.out.println(food);
