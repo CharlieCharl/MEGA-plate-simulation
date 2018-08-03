@@ -2,13 +2,12 @@ package gui.controllers;
 
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
-import javafx.scene.CacheHint;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-
-import javafx.scene.effect.Bloom;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.effect.GaussianBlur;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import plate.Field;
 import simulation.Simulation;
@@ -18,83 +17,49 @@ public class MainWindowController extends AnimationTimer {
     @FXML
     private Canvas canvas;
     private GraphicsContext gc;
-    private int alive;
-    private int dead;
     private Simulation simulation;
-
-    //  private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(4);
-//    private Runnable refreshCanvas = this::updateCanvas;
-
+    BoxBlur bb = new BoxBlur();
 
     public void init(Simulation simulation) {
         this.simulation = simulation;
-
-//        gc.setFill(Color.BLACK);
-//        gc.fillRect(0,0, 110,350);
-
-//        gc.setFill(Color.OLIVE);
-//        gc.fillRect(110,0, 110,350);
-
-//        gc.setFill(Color.ORANGE);
-//        gc.fillRect(220,0, 110,350);
-
-//        gc.setFill(Color.BLUE);
-//        gc.fillRect(330,0, 110,350);
-
-//        gc.setFill(Color.GREEN);
-//        gc.fillRect(440,0, 120,350);
-//        gc.setFill(Color.BLUE);
-//        gc.fillRect(560,0, 110,350);
-//        gc.setFill(Color.ORANGE);
-//        gc.fillRect(670,0, 110,350);
-//        gc.setFill(Color.OLIVE);
-//        gc.fillRect(780,0, 110,350);
-//        gc.setFill(Color.BLACK);
-//        gc.fillRect(890,0, 110,350);
+        bb.setWidth(5);
+        bb.setHeight(5);
+        bb.setIterations(3);
     }
 
     private void updateCanvas() {
-
-        alive = 0;
-        dead = 0;
-        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc = canvas.getGraphicsContext2D();
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         Field[][] fields = simulation.getPlate().getFields();
 
-       // gc.setEffect(new BoxBlur());
+        WritableImage img = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
+        PixelWriter pw = img.getPixelWriter();
+
         for (int i = 0; i < canvas.getWidth(); i++) {
             for (int j = 0; j < canvas.getHeight(); j++) {
                 Field field = fields[i][j];
-                if (field.getBacteria() != null) {
-                    if (field.getBacteria().isAlive()) {
-                        gc.setFill(Color.rgb(255, 255, 255, 1));
-                        gc.fillRect(i, j, 1, 1);
-                    }
-                    //alive++;
+                Color c;
+                if (field.getBacteria() != null && field.getBacteria().isAlive()) {
+                    c = new Color(1.0,1.0,1.0,1.0 - field.getBacteria().getResistance());
                 }
-            } //else dead++;
+                else{ c = Color.BLACK;
+                }
+                pw.setColor(i,j,c);
+            }
         }
-    }
 
+        gc = canvas.getGraphicsContext2D();
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        gc.setEffect(bb);
+       // gc.setEffect(new GaussianBlur(20));
+        gc.drawImage(img, 0, 0);
+    }
 
     @Override
     public void handle(long now) {
         updateCanvas();
-         System.out.println(        simulation.getPlate().getAliveBacterias().size());
-//        System.out.println("Alive " + alive);
-//        System.out.println("Dead " +dead);
-//        System.out.println(food);
+        //  System.out.println(simulation.getPlate().getAliveBacterias().size());
     }
 }
 
-
-
-//    Field[][] fields = simulation.getPlate().getFields();
-//        for (int i = 0; i < canvas.getWidth(); i++){
-//        for (int j = 0; j < canvas.getHeight(); j++){
-//        Field field = fields[i][j];
-//        float alpha = field.getFood();
-//        gc.setFill(Color.rgb(1,1,1, alpha));
-//        gc.fillRect(i,j,1,1);
-//        }
 

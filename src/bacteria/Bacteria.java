@@ -16,18 +16,18 @@ public class Bacteria{
     public Bacteria(int x, int y) {
         this.x = x;
         this.y = y;
-        this.resistance = 0.01f;
-        this.hunger = 10;
+        //this.resistance = 0.01f;
+        this.resistance = ThreadLocalRandom.current().nextDouble(0.01,0.09);
+        this.hunger = 35;
     }
 
     public Bacteria(Bacteria parent){
         this.x = parent.getX();
         this.y = parent.getY();
-        resistance = parent.getResistance() + (2 * ThreadLocalRandom.current().nextDouble(-0.01f,0.01f) );
-    }
-
-    private void evolve(){
-        this.resistance += 0.0000001f;
+        this.resistance = parent.getResistance() + (ThreadLocalRandom.current().nextDouble(-0.001f,0.027f) );
+        while (this.resistance < 0 || this.resistance > 1.0){
+            this.resistance = parent.getResistance() + (ThreadLocalRandom.current().nextDouble(-0.001f,0.027f) );}
+        this.hunger = 40;
     }
 
     public double getResistance() {
@@ -36,7 +36,7 @@ public class Bacteria{
 
     public boolean canReproduce(){
         if(this.hunger == 0){
-            this.hunger = 10;
+            this.hunger = 40;
             return true;
         }
         return false;

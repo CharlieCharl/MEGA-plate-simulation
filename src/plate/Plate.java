@@ -13,18 +13,14 @@ public class Plate {
     private int width;
     private int height;
     private Field[][] fields;
-    private List<Float> amtibiotics;
     private  List<Bacteria> bacteriasToAdd;
     private List<Bacteria> deadbacterias;
-    private long toEvolve;
-
 
     public Plate(int width, int height) {
         this.aliveBacterias = new ArrayList<>();
         this.width = width;
         this.height = height;
         this.fields = new Field[width][height];
-        this.amtibiotics = amtibiotics;
         this.bacteriasToAdd = new ArrayList<>();
         this.deadbacterias = new ArrayList<>();
 
@@ -33,9 +29,9 @@ public class Plate {
                 this.fields[i][j] = new Field(); } }
 
         setAntibioticArea(0.00f,1);
-        setAntibioticArea(0.45f,2);
-        setAntibioticArea(0.65f,3);
-        setAntibioticArea(0.75f,4);
+        setAntibioticArea(0.2f,2);
+        setAntibioticArea(0.40f,3);
+        setAntibioticArea(0.60f,4);
         setAntibioticArea(0.95f,5);
         generateFirstGenerationOfBacterias();
     }
@@ -80,7 +76,6 @@ public class Plate {
         }
     }
 
-
     private void generateFirstGenerationOfBacterias() {
         for (int i = 0; i < 10; i++) {
             int y = ThreadLocalRandom.current().nextInt(350);
@@ -95,7 +90,6 @@ public class Plate {
             aliveBacterias.add(bacteria);
             fields[x][y].setBacteria(bacteria); }
     }
-
 
     private boolean isFieldEmpty(int x, int y){
         if(x < 0 || x > width - 1 || y < 0 || y > height -1){ return false; }
@@ -116,44 +110,46 @@ public class Plate {
             if(bacteria.canReproduce()){
                 bacteriaReproduce(bacteria, avalibleDirections);
             }//move and eat
-            else {
-                if (!avalibleDirections.isEmpty()) {
-                    int direction = new Random().nextInt(avalibleDirections.size());
-                    switch (avalibleDirections.get(direction)) {
-                        case UP:
-                            bacteria.setY(bacteria.getY() - 1);
-                            fields[bacteria.getX()][bacteria.getY()].setBacteria(bacteria);
-                            fields[bacteria.getX()][bacteria.getY() + 1].setBacteria(null);
-                            bacteria.eatFood(fields[bacteria.getX()][bacteria.getY()]);
-                            break;
-                        case LEFT:
-                            bacteria.setX(bacteria.getX() - 1);
-                            fields[bacteria.getX()][bacteria.getY()].setBacteria(bacteria);
-                            fields[bacteria.getX() + 1][bacteria.getY()].setBacteria(null);
-                            bacteria.eatFood(fields[bacteria.getX()][bacteria.getY()]);
-                            break;
-                        case RIGHT:
-                            bacteria.setX(bacteria.getX() + 1);
-                            fields[bacteria.getX()][bacteria.getY()].setBacteria(bacteria);
-                            fields[bacteria.getX() - 1][bacteria.getY()].setBacteria(null);
-                            bacteria.eatFood(fields[bacteria.getX()][bacteria.getY()]);
-                            break;
-                        case DOWN:
-                            bacteria.setY(bacteria.getY() + 1);
-                            fields[bacteria.getX()][bacteria.getY()].setBacteria(bacteria);
-                            fields[bacteria.getX()][bacteria.getY() - 1].setBacteria(null);
-                            bacteria.eatFood(fields[bacteria.getX()][bacteria.getY()]);
-                            break;
-                    }
-                }
-            }
-            if(fields[bacteria.getX()][bacteria.getY()].getAntibiotic() > bacteria.getResistance()){
-                System.out.println(bacteria);
+            else { bacteriaMoveAndEat(bacteria, avalibleDirections); }
+
+            if((fields[bacteria.getX()][bacteria.getY()].getAntibiotic() > bacteria.getResistance())){
+              //  System.out.println(bacteria);
                 bacteria.setAlive(false);
-                deadbacterias.add(bacteria);
                // fields[bacteria.getX()][bacteria.getY()].setBacteria(null);
             }
         });
+    }
+
+    private void bacteriaMoveAndEat(Bacteria bacteria, List<Direction> avalibleDirections) {
+        if (!avalibleDirections.isEmpty()) {
+            int direction = new Random().nextInt(avalibleDirections.size());
+            switch (avalibleDirections.get(direction)) {
+                case UP:
+                    bacteria.setY(bacteria.getY() - 1);
+                    fields[bacteria.getX()][bacteria.getY()].setBacteria(bacteria);
+                    fields[bacteria.getX()][bacteria.getY() + 1].setBacteria(null);
+                    bacteria.eatFood(fields[bacteria.getX()][bacteria.getY()]);
+                    break;
+                case LEFT:
+                    bacteria.setX(bacteria.getX() - 1);
+                    fields[bacteria.getX()][bacteria.getY()].setBacteria(bacteria);
+                    fields[bacteria.getX() + 1][bacteria.getY()].setBacteria(null);
+                    bacteria.eatFood(fields[bacteria.getX()][bacteria.getY()]);
+                    break;
+                case RIGHT:
+                    bacteria.setX(bacteria.getX() + 1);
+                    fields[bacteria.getX()][bacteria.getY()].setBacteria(bacteria);
+                    fields[bacteria.getX() - 1][bacteria.getY()].setBacteria(null);
+                    bacteria.eatFood(fields[bacteria.getX()][bacteria.getY()]);
+                    break;
+                case DOWN:
+                    bacteria.setY(bacteria.getY() + 1);
+                    fields[bacteria.getX()][bacteria.getY()].setBacteria(bacteria);
+                    fields[bacteria.getX()][bacteria.getY() - 1].setBacteria(null);
+                    bacteria.eatFood(fields[bacteria.getX()][bacteria.getY()]);
+                    break;
+            }
+        }
     }
 
     private void bacteriaReproduce(Bacteria bacteria, List<Direction> avalibleDirections) {
@@ -162,22 +158,18 @@ public class Plate {
             Bacteria tempBacteria = null;
             switch (avalibleDirections.get(direction)) {
                 case UP:
-                    //tempBacteria = new Bacteria(bacteria.getX(), bacteria.getY() - 1);
                     tempBacteria = new Bacteria(bacteria);
                     tempBacteria.setY(bacteria.getY() - 1);
                     break;
                 case LEFT:
-                   // tempBacteria = new Bacteria(bacteria.getX() - 1, bacteria.getY());
                     tempBacteria = new Bacteria(bacteria);
                     tempBacteria.setX(bacteria.getX() - 1);
                     break;
                 case RIGHT:
-                    //tempBacteria = new Bacteria(bacteria.getX() + 1, bacteria.getY());
                     tempBacteria = new Bacteria(bacteria);
                     tempBacteria.setX(bacteria.getX() + 1);
                     break;
                 case DOWN:
-                  //  tempBacteria = new Bacteria(bacteria.getX(), bacteria.getY() + 1);
                     tempBacteria = new Bacteria(bacteria);
                     tempBacteria.setY(bacteria.getY() + 1);
                     break;

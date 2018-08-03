@@ -11,7 +11,7 @@ public class Field {
 
     public Field() {
         this.bacteria = null;
-        this.food = 10;
+        this.food = 100;
         this.antibiotic = 0.0f;
     }
 
@@ -38,8 +38,6 @@ public class Field {
     public double getAntibiotic() { return antibiotic; }
 
     public void setAntibiotic(float antibiotic) { this.antibiotic = antibiotic; }
-
-    public void setFood(int food) { this.food = food; }
 
     @Override
     public String toString() { return "antibiotic: " + this.antibiotic + ", bacteria: " + this.bacteria + ", food: " +this.food; }

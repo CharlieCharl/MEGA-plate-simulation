@@ -17,16 +17,5 @@ public class Simulation extends AnimationTimer {
         plate.update();
     }
 
-//    @Override
-//    public void run() {
-//        while (running){
-//            plate.update();
-//        }
-//    }
-
-    public Plate getPlate() {
-        return plate;
-    }
-
-
+    public Plate getPlate() { return plate; }
 }
