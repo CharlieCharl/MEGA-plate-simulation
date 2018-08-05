@@ -33,10 +33,10 @@ public class Plate {
         setAntibioticArea(0.40f,3);
         setAntibioticArea(0.60f,4);
         setAntibioticArea(0.95f,5);
-        generateFirstGenerationOfBacterias();
+        //generateFirstGenerationOfBacterias();
     }
 
-   private void setAntibioticArea(float antibioticValue, int area){
+   public void setAntibioticArea(float antibioticValue, int area){
         switch (area){
             case 1:
                 for (int i = 0; i < 110; i++) {
@@ -76,19 +76,23 @@ public class Plate {
         }
     }
 
-    private void generateFirstGenerationOfBacterias() {
-        for (int i = 0; i < 10; i++) {
+    public void generateFirstGenerationOfBacterias(int startingBacterias) {
+        for (int i = 0; i < startingBacterias; i++) {
             int y = ThreadLocalRandom.current().nextInt(350);
             int x = 0;
             Bacteria bacteria = new Bacteria(x, y);
             aliveBacterias.add(bacteria);
             fields[x][y].setBacteria(bacteria); }
-        for (int i = 0; i <  10; i++) {
+        for (int i = 0; i <  startingBacterias; i++) {
             int y = ThreadLocalRandom.current().nextInt(350);
             int x = 999;
             Bacteria bacteria = new Bacteria(x, y);
             aliveBacterias.add(bacteria);
             fields[x][y].setBacteria(bacteria); }
+    }
+
+    public void setBacteriasHunger(int hunger){
+        aliveBacterias.forEach(bacteria -> bacteria.setHunger(hunger));
     }
 
     private boolean isFieldEmpty(int x, int y){
@@ -118,6 +122,15 @@ public class Plate {
                // fields[bacteria.getX()][bacteria.getY()].setBacteria(null);
             }
         });
+    }
+
+    public void setPlateFood(int foodValue){
+        for (int i = 0; i < this.width; i++){
+            for (int j = 0; j < this.height; j++){
+                this.fields[i][j] = new Field();
+                this.fields[i][j].setFood(foodValue);
+            }
+        }
     }
 
     private void bacteriaMoveAndEat(Bacteria bacteria, List<Direction> avalibleDirections) {

@@ -65,6 +65,10 @@ public class Bacteria{
 
     public void setAlive(boolean alive) { this.alive = alive; }
 
+    public void setHunger(int hunger){
+        this.hunger = hunger;
+    }
+
     @Override
     public String toString() {
         return "x: " + x + ", y: " + y + " " +  this.resistance + "  resistance, " + this.hunger + " hunger " + this.movesWithoutFood + " moves without food"; }

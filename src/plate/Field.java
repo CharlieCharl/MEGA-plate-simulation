@@ -39,6 +39,8 @@ public class Field {
 
     public void setAntibiotic(float antibiotic) { this.antibiotic = antibiotic; }
 
+    public void setFood(int food) { this.food = food; }
+
     @Override
     public String toString() { return "antibiotic: " + this.antibiotic + ", bacteria: " + this.bacteria + ", food: " +this.food; }
 }
