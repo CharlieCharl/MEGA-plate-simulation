@@ -3,9 +3,7 @@ import bacteria.Bacteria;
 import bacteria.Direction;
 import plate.Field;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Plate {
@@ -206,6 +204,23 @@ public class Plate {
     public Field[][] getFields() {
         return fields;
     }
+
+    public double calculateAvgResistance(){
+       double avgResistance = 0;
+        for(Bacteria b : aliveBacterias){
+            avgResistance += b.getResistance();
+        }
+        avgResistance = avgResistance / aliveBacterias.size();
+        return avgResistance;
+    }
+
+    public double getTopResistance(){
+        double topResistance = 0;
+        Bacteria bacteria =  Collections.max(aliveBacterias, Comparator.comparing(s -> s.getResistance()));
+            topResistance = bacteria.getResistance();
+            return topResistance;
+    }
+
 
     public List<Bacteria> getAliveBacterias() {
         return aliveBacterias;

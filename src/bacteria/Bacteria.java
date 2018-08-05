@@ -24,10 +24,10 @@ public class Bacteria{
     public Bacteria(Bacteria parent){
         this.x = parent.getX();
         this.y = parent.getY();
-        this.resistance = parent.getResistance() + (ThreadLocalRandom.current().nextDouble(-0.001f,0.027f) );
+        this.resistance = parent.getResistance() + (ThreadLocalRandom.current().nextDouble(-0.001f,0.03f) );
         while (this.resistance < 0 || this.resistance > 1.0){
-            this.resistance = parent.getResistance() + (ThreadLocalRandom.current().nextDouble(-0.001f,0.027f) );}
-        this.hunger = 40;
+            this.resistance = parent.getResistance() + (ThreadLocalRandom.current().nextDouble(-0.001f,0.03f) );}
+        this.hunger = 35;
     }
 
     public double getResistance() {
@@ -36,7 +36,7 @@ public class Bacteria{
 
     public boolean canReproduce(){
         if(this.hunger == 0){
-            this.hunger = 40;
+            this.hunger = 35;
             return true;
         }
         return false;

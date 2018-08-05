@@ -13,21 +13,22 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.MainWindowController">
+<AnchorPane minWidth="1300.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.MainWindowController">
    <children>
-      <HBox prefHeight="350.0" prefWidth="1198.0">
+      <HBox prefHeight="350.0" prefWidth="1300.0">
          <children>
-            <Pane style="-fx-background-color: Black;">
+            <Pane minWidth="1000.0" style="-fx-background-color: Black;">
                <children>
                   <Canvas fx:id="canvas" height="350.0" width="1000.0" />
                </children>
             </Pane>
-            <VBox prefHeight="350.0" prefWidth="198.0">
+            <VBox minWidth="180.0" prefHeight="350.0" prefWidth="210.0">
                <children>
-                  <ToolBar prefHeight="35.0" prefWidth="182.0">
+                  <ToolBar minWidth="163.0" prefHeight="35.0" prefWidth="272.0">
                     <items>
-                      <Button fx:id="buttonStart" mnemonicParsing="false" onAction="#startButtonEventHandler" text="Start" />
-                        <Button fx:id="buttonPause" mnemonicParsing="false" onAction="#PauseButtonEventHandler" text="Pause" />
+                      <Button fx:id="buttonStart" minWidth="50.0" mnemonicParsing="false" onAction="#startButtonEventHandler" text="Start" />
+                        <Button fx:id="buttonPause" minWidth="50.0" mnemonicParsing="false" onAction="#PauseButtonEventHandler" text="Pause" />
+                        <Button fx:id="restartButton" minWidth="50.0" mnemonicParsing="false" onAction="#restartButtonEventHandler" text="Restart" />
                     </items>
                   </ToolBar>
                   <GridPane>
@@ -39,6 +40,7 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -69,6 +71,28 @@
                         <TextField fx:id="fourthZoneTextField" text="0.95" GridPane.columnIndex="1" GridPane.rowIndex="8" />
                         <Label text="Alive Bacterias" GridPane.rowIndex="9" />
                         <Label fx:id="aliveBacteriasLabel" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                        <Label text="avg resistance" GridPane.rowIndex="10" />
+                        <Label fx:id="avgResistanceLabel" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+                     </children>
+                  </GridPane>
+               </children>
+            </VBox>
+            <VBox minWidth="180.0" prefHeight="350.0" prefWidth="198.0">
+               <children>
+                  <GridPane>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="111.0" minWidth="10.0" prefWidth="96.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="84.0" minWidth="10.0" prefWidth="84.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Label text="top resistance" GridPane.rowIndex="1" />
+                        <Label fx:id="topResistanceLabel" prefHeight="17.0" prefWidth="54.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
                </children>

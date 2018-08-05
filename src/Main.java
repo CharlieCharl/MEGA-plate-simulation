@@ -18,7 +18,7 @@ public class Main extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/fxml/MainWindow.fxml"));
         Parent root = loader.load();
         primaryStage.setTitle("MEGA plate simulation");
-        primaryStage.setScene(new Scene(root, 1200, 351));
+        primaryStage.setScene(new Scene(root, 1300, 351));
         primaryStage.setResizable(false);
 
         Simulation simulation = new Simulation();
