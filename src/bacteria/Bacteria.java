@@ -73,6 +73,9 @@ public class Bacteria{
     public String toString() {
         return "x: " + x + ", y: " + y + " " +  this.resistance + "  resistance, " + this.hunger + " hunger " + this.movesWithoutFood + " moves without food"; }
 
+    public int getHunger() {
+        return hunger;
+    }
 }
 
 

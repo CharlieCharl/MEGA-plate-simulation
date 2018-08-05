@@ -13,6 +13,7 @@ public class Plate {
     private Field[][] fields;
     private  List<Bacteria> bacteriasToAdd;
     private List<Bacteria> deadbacterias;
+    private int fixfood;
 
     public Plate(int width, int height) {
         this.aliveBacterias = new ArrayList<>();
@@ -91,6 +92,11 @@ public class Plate {
 
     public void setBacteriasHunger(int hunger){
         aliveBacterias.forEach(bacteria -> bacteria.setHunger(hunger));
+        this.fixfood = hunger;
+    }
+
+    public void setBacteriasToaddHunger(int hunger){
+        bacteriasToAdd.forEach(bacteria -> bacteria.setHunger(hunger));
     }
 
     private boolean isFieldEmpty(int x, int y){
@@ -187,6 +193,7 @@ public class Plate {
             }
             fields[tempBacteria.getX()][tempBacteria.getY()].setBacteria(tempBacteria);
             bacteriasToAdd.add(tempBacteria);
+            setBacteriasToaddHunger(fixfood);
         }
     }
 

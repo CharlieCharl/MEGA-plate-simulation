@@ -145,7 +145,7 @@ public class MainWindowController extends AnimationTimer {
                 Color c;
                 if (field.getBacteria() != null && field.getBacteria().isAlive()) {
                     double resistance = field.getBacteria().getResistance();
-
+                 //   System.out.println(field.getBacteria().getHunger());
                     if(resistance <= 0.11f ){
                         opacity = 1.0f;
                       //  System.out.println(opacity);
