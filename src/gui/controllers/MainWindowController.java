@@ -1,9 +1,16 @@
 package gui.controllers;
 
+import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -12,14 +19,19 @@ import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 import plate.Field;
 import simulation.Simulation;
 
+import java.sql.Time;
+import java.util.Timer;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
+
 
 public class MainWindowController extends AnimationTimer {
-
-    private int alive;
-
     @FXML
     private Canvas canvas;
 
@@ -65,33 +77,58 @@ public class MainWindowController extends AnimationTimer {
     @FXML
     private Label topResistanceLabel;
 
+    @FXML
+    private LineChart<Integer, Double> lineChart;
 
+    long startTime;
 
     private GraphicsContext gc;
     private Simulation simulation;
     BoxBlur bb = new BoxBlur();
-
+    XYChart.Series series;
+    Integer test = 0;
+    private Timeline timeline;
     public void init(Simulation simulation) {
+
+
+        timeline = new Timeline();
         this.simulation = simulation;
         bb.setWidth(2);
         bb.setHeight(2);
         bb.setIterations(1);
-
         updateValues();
+        series = new XYChart.Series();
+        lineChart.getXAxis().setLabel("Time");
+        lineChart.getYAxis().setLabel("Average resistance");
+        lineChart.setAnimated(false);
+
+        Timeline timeline = new Timeline();
+
+        timeline.getKeyFrames().add(
+                new KeyFrame(Duration.millis(2000), (ActionEvent actionEvent) -> {
+                    double data = simulation.getPlate().calculateAvgResistance();
+                        series.getData().add(new XYChart.Data(test.toString(), data));
+                        test += 2;
+                        lineChart.getData().add(series);
+                }));
+
+        timeline.setCycleCount(Animation.INDEFINITE);
+      //  timeline.setAutoReverse(true);  //!?
+        timeline.play();
     }
+
+
 
     public void updateValues(){
         int foodPerField = Integer.parseInt(foodPerFieldTextField.getText());
         int bacteriasHunegr = Integer.parseInt(bacteriasHungerTextField.getText());
         int startBacterias = Integer.parseInt(startingPopulationTextfield.getText());
 
-
         float startAreaAntibiotic = Float.parseFloat(startAreaTextField.getText());
         float firstAreaAntibiotic = Float.parseFloat(firstZoneTextField.getText());
         float secondAreaAntibiotic = Float.parseFloat(secondZoneTextField.getText());
         float thirdAreaAntibiotic = Float.parseFloat(thirdZoneTextField.getText());
         float fourthAreaAntibiotic = Float.parseFloat(fourthZoneTextField.getText());
-
 
         simulation.getPlate().setPlateFood(foodPerField);
         simulation.getPlate().generateFirstGenerationOfBacterias(startBacterias);
@@ -101,7 +138,6 @@ public class MainWindowController extends AnimationTimer {
         simulation.getPlate().setAntibioticArea(secondAreaAntibiotic,3);
         simulation.getPlate().setAntibioticArea(thirdAreaAntibiotic,4);
         simulation.getPlate().setAntibioticArea(fourthAreaAntibiotic,5);
-
     }
 
     @FXML
@@ -129,7 +165,8 @@ public class MainWindowController extends AnimationTimer {
     }
 
     private void updateCanvas() {
-        alive = 0;
+        timeline.play();
+
         double strongest = simulation.getPlate().getTopResistance();
         double opacity;
         gc = canvas.getGraphicsContext2D();
@@ -193,13 +230,17 @@ public class MainWindowController extends AnimationTimer {
         this.aliveBacteriasLabel.setText(String.valueOf(simulation.getPlate().getAliveBacterias().size()));
         avgResistanceLabel.setText(String.format("%.5f",simulation.getPlate().calculateAvgResistance()));
         topResistanceLabel.setText(String.format("%.5f",simulation.getPlate().getTopResistance()));
+
     }
 
     @Override
     public void handle(long now) {
+    //    timeline.play();
         updateCanvas();
-        //  System.out.println(simulation.getPlate().getAliveBacterias().size());
+       // timeline.stop();
     }
+
+
 }
 
 

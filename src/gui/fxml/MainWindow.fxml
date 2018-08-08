@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
@@ -8,96 +11,82 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane minWidth="1300.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.MainWindowController">
+<AnchorPane minWidth="1000.0" prefHeight="788.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.MainWindowController">
    <children>
-      <HBox prefHeight="350.0" prefWidth="1300.0">
+      <Pane minWidth="1000.0" style="-fx-background-color: Black;">
          <children>
-            <Pane minWidth="1000.0" style="-fx-background-color: Black;">
-               <children>
-                  <Canvas fx:id="canvas" height="350.0" width="1000.0" />
-               </children>
-            </Pane>
-            <VBox minWidth="180.0" prefHeight="350.0" prefWidth="210.0">
-               <children>
-                  <ToolBar minWidth="163.0" prefHeight="35.0" prefWidth="272.0">
-                    <items>
-                      <Button fx:id="buttonStart" minWidth="50.0" mnemonicParsing="false" onAction="#startButtonEventHandler" text="Start" />
-                        <Button fx:id="buttonPause" minWidth="50.0" mnemonicParsing="false" onAction="#PauseButtonEventHandler" text="Pause" />
-                        <Button fx:id="restartButton" minWidth="50.0" mnemonicParsing="false" onAction="#restartButtonEventHandler" text="Restart" />
-                    </items>
-                  </ToolBar>
-                  <GridPane>
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="111.0" minWidth="10.0" prefWidth="111.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="94.0" minWidth="10.0" prefWidth="87.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                     <children>
-                        <Label text="Bacteria's hunger" />
-                        <Label text="Food per field" GridPane.rowIndex="1" />
-                        <Label text="Starting population" GridPane.rowIndex="2" />
-                        <TextField fx:id="bacteriasHungerTextField" text="35" GridPane.columnIndex="1" />
-                        <TextField fx:id="foodPerFieldTextField" text="100" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <TextField fx:id="startingPopulationTextfield" text="10" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <TextField fx:id="startAreaTextField" text="0.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                        <Label text="Antibiotic" GridPane.rowIndex="3" />
-                        <Label text="Start area" GridPane.rowIndex="4" />
-                        <Label text="Zone 1" GridPane.rowIndex="5" />
-                        <Label text="Zone 2" GridPane.rowIndex="6" />
-                        <Label text="Zone 3" GridPane.rowIndex="7" />
-                        <Label text="zone 4" GridPane.rowIndex="8" />
-                        <TextField GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                        <TextField GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                        <TextField fx:id="firstZoneTextField" text="0.2" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                        <TextField fx:id="secondZoneTextField" text="0.4" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                        <TextField fx:id="thirdZoneTextField" text="0.6" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-                        <TextField fx:id="fourthZoneTextField" text="0.95" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-                        <Label text="Alive Bacterias" GridPane.rowIndex="9" />
-                        <Label fx:id="aliveBacteriasLabel" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-                        <Label text="avg resistance" GridPane.rowIndex="10" />
-                        <Label fx:id="avgResistanceLabel" GridPane.columnIndex="1" GridPane.rowIndex="10" />
-                     </children>
-                  </GridPane>
-               </children>
-            </VBox>
-            <VBox minWidth="180.0" prefHeight="350.0" prefWidth="198.0">
-               <children>
-                  <GridPane>
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="111.0" minWidth="10.0" prefWidth="96.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="84.0" minWidth="10.0" prefWidth="84.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                     <children>
-                        <Label text="top resistance" GridPane.rowIndex="1" />
-                        <Label fx:id="topResistanceLabel" prefHeight="17.0" prefWidth="54.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                     </children>
-                  </GridPane>
-               </children>
-            </VBox>
+            <Canvas fx:id="canvas" height="350.0" width="1000.0" />
          </children>
-      </HBox>
+      </Pane>
+      <VBox layoutX="526.0" layoutY="364.0" minWidth="180.0" prefHeight="350.0" prefWidth="210.0">
+         <children>
+            <ToolBar minWidth="163.0" prefHeight="35.0" prefWidth="272.0">
+              <items>
+                <Button fx:id="buttonStart" minWidth="50.0" mnemonicParsing="false" onAction="#startButtonEventHandler" text="Start" />
+                  <Button fx:id="buttonPause" minWidth="50.0" mnemonicParsing="false" onAction="#PauseButtonEventHandler" text="Pause" />
+                  <Button fx:id="restartButton" minWidth="50.0" mnemonicParsing="false" onAction="#restartButtonEventHandler" text="Restart" />
+              </items>
+            </ToolBar>
+            <GridPane>
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="111.0" minWidth="10.0" prefWidth="111.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="94.0" minWidth="10.0" prefWidth="87.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label text="Bacteria's hunger" />
+                  <Label text="Food per field" GridPane.rowIndex="1" />
+                  <Label text="Starting population" GridPane.rowIndex="2" />
+                  <TextField fx:id="bacteriasHungerTextField" text="35" GridPane.columnIndex="1" />
+                  <TextField fx:id="foodPerFieldTextField" text="100" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <TextField fx:id="startingPopulationTextfield" text="10" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <TextField fx:id="startAreaTextField" text="0.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <Label text="Antibiotic" GridPane.rowIndex="3" />
+                  <Label text="Start area" GridPane.rowIndex="4" />
+                  <Label text="Zone 1" GridPane.rowIndex="5" />
+                  <Label text="Zone 2" GridPane.rowIndex="6" />
+                  <Label text="Zone 3" GridPane.rowIndex="7" />
+                  <Label text="zone 4" GridPane.rowIndex="8" />
+                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <TextField fx:id="firstZoneTextField" text="0.2" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <TextField fx:id="secondZoneTextField" text="0.4" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                  <TextField fx:id="thirdZoneTextField" text="0.6" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                  <TextField fx:id="fourthZoneTextField" text="0.95" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                  <Label text="Alive Bacterias" GridPane.rowIndex="9" />
+                  <Label fx:id="aliveBacteriasLabel" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                  <Label text="avg resistance" GridPane.rowIndex="10" />
+                  <Label fx:id="avgResistanceLabel" prefHeight="17.0" prefWidth="92.0" text="0" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+                  <Label text="top resistance" GridPane.rowIndex="11" />
+                  <Label fx:id="topResistanceLabel" prefHeight="17.0" prefWidth="54.0" GridPane.columnIndex="1" GridPane.rowIndex="11" />
+               </children>
+            </GridPane>
+         </children>
+      </VBox>
+      <LineChart fx:id="lineChart" layoutX="14.0" layoutY="364.0" legendVisible="false" title="average resistance in time">
+        <xAxis>
+          <CategoryAxis side="BOTTOM" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis side="LEFT" />
+        </yAxis>
+      </LineChart>
    </children>
 </AnchorPane>

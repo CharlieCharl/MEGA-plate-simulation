@@ -1,7 +1,6 @@
 package plate;
 import bacteria.Bacteria;
 import bacteria.Direction;
-import plate.Field;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -13,7 +12,7 @@ public class Plate {
     private Field[][] fields;
     private  List<Bacteria> bacteriasToAdd;
     private List<Bacteria> deadbacterias;
-    private int fixfood;
+    private int fixFood;
 
     public Plate(int width, int height) {
         this.aliveBacterias = new ArrayList<>();
@@ -92,7 +91,7 @@ public class Plate {
 
     public void setBacteriasHunger(int hunger){
         aliveBacterias.forEach(bacteria -> bacteria.setHunger(hunger));
-        this.fixfood = hunger;
+        this.fixFood = hunger;
     }
 
     public void setBacteriasToaddHunger(int hunger){
@@ -105,7 +104,20 @@ public class Plate {
         else return false;
     }
 
+    private void tryToKill(){
+        Random random = new Random();
+        aliveBacterias.forEach(bacteria -> {
+            double deathProbability = random.nextDouble();
+            if(deathProbability < 0.001f){
+                //  System.out.println(deathProbability + " trup");
+                bacteria.setAlive(false);
+            }
+        });
+    }
+
     public void update(){
+
+        tryToKill();
         aliveBacterias.removeIf(x -> !x.isAlive());
         aliveBacterias.addAll(bacteriasToAdd);
         bacteriasToAdd.clear();
@@ -193,7 +205,7 @@ public class Plate {
             }
             fields[tempBacteria.getX()][tempBacteria.getY()].setBacteria(tempBacteria);
             bacteriasToAdd.add(tempBacteria);
-            setBacteriasToaddHunger(fixfood);
+            setBacteriasToaddHunger(fixFood);
         }
     }
 
@@ -223,8 +235,10 @@ public class Plate {
 
     public double getTopResistance(){
         double topResistance = 0;
-        Bacteria bacteria =  Collections.max(aliveBacterias, Comparator.comparing(s -> s.getResistance()));
+        if(!aliveBacterias.isEmpty()){
+            Bacteria bacteria =  Collections.max(aliveBacterias, Comparator.comparing(s -> s.getResistance()));
             topResistance = bacteria.getResistance();
+        }
             return topResistance;
     }
 
