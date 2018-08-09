@@ -9,13 +9,11 @@ import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.BoxBlur;
-import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
@@ -45,6 +43,9 @@ public class MainWindowController extends AnimationTimer {
     private Button restartButton;
 
     @FXML
+    private Button continueButton;
+
+    @FXML
     private TextField bacteriasHungerTextField;
 
     @FXML
@@ -54,7 +55,7 @@ public class MainWindowController extends AnimationTimer {
     private TextField startingPopulationTextfield;
 
     @FXML
-    private TextField startAreaTextField;;
+    private TextField startAreaTextField;
 
     @FXML
     private TextField firstZoneTextField;
@@ -80,48 +81,43 @@ public class MainWindowController extends AnimationTimer {
     @FXML
     private LineChart<Integer, Double> lineChart;
 
-    long startTime;
-
     private GraphicsContext gc;
     private Simulation simulation;
-    BoxBlur bb = new BoxBlur();
-    XYChart.Series series;
-    Integer test = 0;
+    private BoxBlur bb = new BoxBlur();
+    private XYChart.Series series;
+    private Integer test;
     private Timeline timeline;
-    public void init(Simulation simulation) {
 
+    public void init(Simulation simulation){
 
         timeline = new Timeline();
         this.simulation = simulation;
+        this.test = 0;
+
         bb.setWidth(2);
         bb.setHeight(2);
         bb.setIterations(1);
+
         updateValues();
         series = new XYChart.Series();
         lineChart.getXAxis().setLabel("Time");
         lineChart.getYAxis().setLabel("Average resistance");
         lineChart.setAnimated(false);
 
-        Timeline timeline = new Timeline();
-
         timeline.getKeyFrames().add(
                 new KeyFrame(Duration.millis(2000), (ActionEvent actionEvent) -> {
                     double data = simulation.getPlate().calculateAvgResistance();
                         series.getData().add(new XYChart.Data(test.toString(), data));
                         test += 2;
-                        lineChart.getData().add(series);
                 }));
-
         timeline.setCycleCount(Animation.INDEFINITE);
       //  timeline.setAutoReverse(true);  //!?
-        timeline.play();
+
     }
 
-
-
-    public void updateValues(){
+    private void updateValues(){
         int foodPerField = Integer.parseInt(foodPerFieldTextField.getText());
-        int bacteriasHunegr = Integer.parseInt(bacteriasHungerTextField.getText());
+        int bacteriaHunger = Integer.parseInt(bacteriasHungerTextField.getText());
         int startBacterias = Integer.parseInt(startingPopulationTextfield.getText());
 
         float startAreaAntibiotic = Float.parseFloat(startAreaTextField.getText());
@@ -132,7 +128,7 @@ public class MainWindowController extends AnimationTimer {
 
         simulation.getPlate().setPlateFood(foodPerField);
         simulation.getPlate().generateFirstGenerationOfBacterias(startBacterias);
-        simulation.getPlate().setBacteriasHunger(bacteriasHunegr);
+        simulation.getPlate().setBacteriasHunger(bacteriaHunger);
         simulation.getPlate().setAntibioticArea(startAreaAntibiotic,1);
         simulation.getPlate().setAntibioticArea(firstAreaAntibiotic,2);
         simulation.getPlate().setAntibioticArea(secondAreaAntibiotic,3);
@@ -141,34 +137,44 @@ public class MainWindowController extends AnimationTimer {
     }
 
     @FXML
+    public void PauseButtonEventHandler(){
+        simulation.stop();
+        stop();
+        timeline.stop();
+    }
+
+    public void continueButtonEventHandler(){
+      timeline.play();
+      start();
+      simulation.start();
+    }
+
+    @FXML
     public void startButtonEventHandler(){
         simulation.stop();
         stop();
         updateValues();
         start();
+        timeline.play();
         simulation.start();
-    }
-
-    @FXML
-    public void PauseButtonEventHandler(){
-        simulation.stop();
-        stop();
+        lineChart.getData().addAll(series);
     }
 
     @FXML
     public void restartButtonEventHandler(){
+       timeline.stop();
        simulation.stop();
        stop();
+       series.getData().clear();
        init(new Simulation());
+       timeline.play();
        simulation.start();
        start();
+       lineChart.getData().addAll(series);
     }
 
     private void updateCanvas() {
-        timeline.play();
-
         double strongest = simulation.getPlate().getTopResistance();
-        double opacity;
         gc = canvas.getGraphicsContext2D();
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         Field[][] fields = simulation.getPlate().getFields();
@@ -181,40 +187,9 @@ public class MainWindowController extends AnimationTimer {
                 Field field = fields[i][j];
                 Color c;
                 if (field.getBacteria() != null && field.getBacteria().isAlive()) {
-                    double resistance = field.getBacteria().getResistance();
-                 //   System.out.println(field.getBacteria().getHunger());
-                    if(resistance <= 0.11f ){
-                        opacity = 1.0f;
-                      //  System.out.println(opacity);
-                    }
-                    else if (resistance >= 0.12f && resistance <= 0.29f){
-                        opacity = 1.0f - resistance / 2;
-                    //    System.out.println(opacity);
-                    }
-                    else if (resistance >= 0.30f && resistance <= 0.39f){
-                        opacity = 1.0f - resistance / 1.5;
-                        //    System.out.println(opacity);
-                    }
-                    else if (resistance >= 0.40f && resistance <= 0.5f ){
-                        opacity = 1.0f - resistance / 1.3;
-                      //  System.out.println(opacity);
-                    }
-                    else if (resistance >= 0.51f && resistance <= 0.60f ){
-                        opacity = 1.0f - resistance / 1.2;
-                        //  System.out.println(opacity);
-                    }
-                    else if (resistance >= 0.61f && resistance <= 0.7f){
-                        opacity = 1.0f - resistance / 1.1 ;
-                        //  System.out.println(opacity);
-                    }
-                    else if (resistance >= 0.71f && resistance <= 0.89f){
-                        opacity = 1.0f - resistance;
-                        //  System.out.println(opacity);
-                    }
-                    else opacity = 0.2f;
-                    c = new Color(1.0,1.0,1.0,opacity);
 
-                    if (field.getBacteria().getResistance() >= strongest - 0.03)
+                    c = new Color(1.0,1.0,1.0,1);
+                    if (field.getBacteria().getResistance() >= strongest - 0.05f)
                         c = Color.RED;
                 }
                 else{ c = Color.BLACK; }
@@ -224,20 +199,17 @@ public class MainWindowController extends AnimationTimer {
 
         gc = canvas.getGraphicsContext2D();
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-     //   gc.setEffect(bb);
-      //gc.setEffect(new GaussianBlur(20));
+      //  gc.setEffect(bb);
+    //  gc.setEffect(new GaussianBlur(20));
         gc.drawImage(img, 0, 0);
         this.aliveBacteriasLabel.setText(String.valueOf(simulation.getPlate().getAliveBacterias().size()));
         avgResistanceLabel.setText(String.format("%.5f",simulation.getPlate().calculateAvgResistance()));
         topResistanceLabel.setText(String.format("%.5f",simulation.getPlate().getTopResistance()));
-
     }
 
     @Override
     public void handle(long now) {
-    //    timeline.play();
         updateCanvas();
-       // timeline.stop();
     }
 
 

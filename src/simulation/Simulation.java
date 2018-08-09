@@ -5,8 +5,6 @@ import plate.Plate;
 
 public class Simulation extends AnimationTimer {
     private Plate plate;
-    private boolean running = true;
-    private boolean paused = false;
 
     public Simulation() {
         plate = new Plate(1000,350);

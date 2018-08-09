@@ -108,7 +108,7 @@ public class Plate {
         Random random = new Random();
         aliveBacterias.forEach(bacteria -> {
             double deathProbability = random.nextDouble();
-            if(deathProbability < 0.001f){
+            if(deathProbability < 0.00001f){
                 //  System.out.println(deathProbability + " trup");
                 bacteria.setAlive(false);
             }
@@ -116,13 +116,13 @@ public class Plate {
     }
 
     public void update(){
-
         tryToKill();
         aliveBacterias.removeIf(x -> !x.isAlive());
         aliveBacterias.addAll(bacteriasToAdd);
         bacteriasToAdd.clear();
 
         aliveBacterias.forEach(bacteria -> {
+            double death = ThreadLocalRandom.current().nextDouble(0.0,0.11);
             List<Direction> avalibleDirections = new ArrayList<>();
             prepareAvailableDirectionsForBacteria(bacteria, avalibleDirections);
 

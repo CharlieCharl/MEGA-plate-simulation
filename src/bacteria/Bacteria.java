@@ -1,8 +1,8 @@
 package bacteria;
 
+
 import plate.Field;
 
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Bacteria{
@@ -13,29 +13,21 @@ public class Bacteria{
     private int hunger;
     private boolean alive;
     private int movesWithoutFood = 0;
-    Random random = new Random();
 
     public Bacteria(int x, int y) {
         this.x = x;
         this.y = y;
         //this.resistance = 0.01f;
         this.resistance = ThreadLocalRandom.current().nextDouble(0.01,0.09);
-        while (this.resistance < 0 || this.resistance > 1.0) {
-          //  this.resistance = random.nextGaussian();
-            }
         this.hunger = 35;
     }
 
     public Bacteria(Bacteria parent){
         this.x = parent.getX();
         this.y = parent.getY();
-        this.resistance = parent.getResistance() + (ThreadLocalRandom.current().nextDouble(-0.001f,0.03f) );
-        //this.resistance = parent.getResistance() + random.nextGaussian();
+        this.resistance = parent.getResistance() + (ThreadLocalRandom.current().nextDouble(-0.03f,0.03f) );
         while (this.resistance < 0 || this.resistance > 1.0){
-           this.resistance = parent.getResistance() + (ThreadLocalRandom.current().nextDouble(-0.001f,0.03f) );
-          //  this.resistance = parent.getResistance() + random.nextGaussian();
-        }
-
+            this.resistance = parent.getResistance() + (ThreadLocalRandom.current().nextDouble(-0.03f,0.03f) );}
         this.hunger = 35;
     }
 
