@@ -104,14 +104,15 @@ public class MainWindowController extends AnimationTimer {
         lineChart.getYAxis().setLabel("Average resistance");
         lineChart.setAnimated(false);
 
+        series.getData().add(new XYChart.Data("0", 0));
+
         timeline.getKeyFrames().add(
-                new KeyFrame(Duration.millis(2000), (ActionEvent actionEvent) -> {
+                new KeyFrame(Duration.millis(5000), (ActionEvent actionEvent) -> {
                     double data = simulation.getPlate().calculateAvgResistance();
-                        series.getData().add(new XYChart.Data(test.toString(), data));
-                        test += 2;
+                    test += 5;
+                    series.getData().add(new XYChart.Data(test.toString(), data));
                 }));
         timeline.setCycleCount(Animation.INDEFINITE);
-      //  timeline.setAutoReverse(true);  //!?
 
     }
 
