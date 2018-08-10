@@ -1,5 +1,6 @@
 package gui.controllers;
 
+import bacteria.Bacteria;
 import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
@@ -83,7 +84,6 @@ public class MainWindowController extends AnimationTimer {
 
     private GraphicsContext gc;
     private Simulation simulation;
-    private BoxBlur bb = new BoxBlur();
     private XYChart.Series series;
     private Integer test;
     private Timeline timeline;
@@ -94,11 +94,7 @@ public class MainWindowController extends AnimationTimer {
         this.simulation = simulation;
         this.test = 0;
 
-        bb.setWidth(2);
-        bb.setHeight(2);
-        bb.setIterations(1);
-
-        updateValues();
+        //updateValues();
         series = new XYChart.Series();
         lineChart.getXAxis().setLabel("Time");
         lineChart.getYAxis().setLabel("Average resistance");
@@ -114,6 +110,28 @@ public class MainWindowController extends AnimationTimer {
                 }));
         timeline.setCycleCount(Animation.INDEFINITE);
 
+    }
+
+    private Color pickColor(Bacteria bacteria){
+        if (bacteria.getResistance() < 0.1) {
+            return Color.WHITE;
+        }
+        if (bacteria.getResistance() < 0.25) {
+            return Color.ANTIQUEWHITE;
+        }
+        if (bacteria.getResistance() < 0.5) {
+            return Color.BURLYWOOD;
+        }
+        if (bacteria.getResistance() < 0.7) {
+            return Color.CORAL;
+        }
+        if (bacteria.getResistance() < 0.85) {
+            return Color.CHOCOLATE;
+        }
+        if (bacteria.getResistance() < 0.9) {
+            return Color.GOLD;
+        }
+        else return Color.LIME;
     }
 
     private void updateValues(){
@@ -168,6 +186,7 @@ public class MainWindowController extends AnimationTimer {
        stop();
        series.getData().clear();
        init(new Simulation());
+       updateValues();
        timeline.play();
        simulation.start();
        start();
@@ -175,7 +194,6 @@ public class MainWindowController extends AnimationTimer {
     }
 
     private void updateCanvas() {
-        double strongest = simulation.getPlate().getTopResistance();
         gc = canvas.getGraphicsContext2D();
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         Field[][] fields = simulation.getPlate().getFields();
@@ -188,24 +206,18 @@ public class MainWindowController extends AnimationTimer {
                 Field field = fields[i][j];
                 Color c;
                 if (field.getBacteria() != null && field.getBacteria().isAlive()) {
-
-                    c = new Color(1.0,1.0,1.0,1);
-                    if (field.getBacteria().getResistance() >= strongest - 0.05f)
-                        c = Color.RED;
+                    c = pickColor(field.getBacteria());
                 }
                 else{ c = Color.BLACK; }
                 pw.setColor(i,j,c);
             }
         }
-
-        gc = canvas.getGraphicsContext2D();
-        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-      //  gc.setEffect(bb);
-    //  gc.setEffect(new GaussianBlur(20));
-        gc.drawImage(img, 0, 0);
+        this.gc = canvas.getGraphicsContext2D();
+        this.gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        this.gc.drawImage(img, 0, 0);
         this.aliveBacteriasLabel.setText(String.valueOf(simulation.getPlate().getAliveBacterias().size()));
-        avgResistanceLabel.setText(String.format("%.5f",simulation.getPlate().calculateAvgResistance()));
-        topResistanceLabel.setText(String.format("%.5f",simulation.getPlate().getTopResistance()));
+        this.avgResistanceLabel.setText(String.format("%.5f",simulation.getPlate().calculateAvgResistance()));
+        this.topResistanceLabel.setText(String.format("%.5f",simulation.getPlate().getTopResistance()));
     }
 
     @Override

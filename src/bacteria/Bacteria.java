@@ -19,15 +19,19 @@ public class Bacteria{
         this.y = y;
         //this.resistance = 0.01f;
         this.resistance = ThreadLocalRandom.current().nextDouble(0.01,0.09);
+    //   this.resistance = ThreadLocalRandom.current().nextGaussian() + 0.01f;
+//        while (this.resistance < 0 || this.resistance > 1.0){
+//        this.resistance = ThreadLocalRandom.current().nextGaussian() + 0.5f;}
         this.hunger = 35;
     }
 
-    public Bacteria(Bacteria parent){
+    public Bacteria(Bacteria parent,double resistance){
         this.x = parent.getX();
         this.y = parent.getY();
-        this.resistance = parent.getResistance() + (ThreadLocalRandom.current().nextDouble(-0.03f,0.03f) );
-        while (this.resistance < 0 || this.resistance > 1.0){
-            this.resistance = parent.getResistance() + (ThreadLocalRandom.current().nextDouble(-0.03f,0.03f) );}
+        //this.resistance = parent.getResistance() + (ThreadLocalRandom.current().nextDouble(-0.03f,0.03f) );
+        this.resistance = resistance;
+       // while (this.resistance < 0 || this.resistance > 1.0){
+        //    this.resistance = parent.getResistance() + (ThreadLocalRandom.current().nextDouble(-0.03f,0.03f) );}
         this.hunger = 35;
     }
 

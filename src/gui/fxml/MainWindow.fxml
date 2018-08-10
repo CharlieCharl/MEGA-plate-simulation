@@ -21,7 +21,7 @@
             <Canvas fx:id="canvas" height="350.0" width="1000.0" />
          </children>
       </Pane>
-      <LineChart fx:id="lineChart" layoutY="350.0" legendVisible="false" prefHeight="400.0" prefWidth="707.0" title="average resistance in time">
+      <LineChart fx:id="lineChart" layoutX="6.0" layoutY="350.0" legendVisible="false" prefHeight="400.0" prefWidth="707.0" title="average resistance in time">
         <xAxis>
           <CategoryAxis side="BOTTOM" />
         </xAxis>
@@ -29,10 +29,10 @@
           <NumberAxis side="LEFT" />
         </yAxis>
       </LineChart>
-      <GridPane layoutX="722.0" layoutY="384.0" prefHeight="360.0" prefWidth="273.0">
+      <GridPane layoutX="722.0" layoutY="385.0" prefHeight="360.0" prefWidth="144.0">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="179.0" minWidth="10.0" prefWidth="179.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="94.0" minWidth="10.0" prefWidth="63.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="179.0" minWidth="10.0" prefWidth="109.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="161.0" minWidth="10.0" prefWidth="43.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -55,7 +55,7 @@
             <TextField fx:id="bacteriasHungerTextField" text="35" GridPane.columnIndex="1" />
             <TextField fx:id="foodPerFieldTextField" prefWidth="82.0" text="100" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <TextField fx:id="startingPopulationTextfield" text="10" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <TextField fx:id="startAreaTextField" text="0.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <TextField fx:id="startAreaTextField" prefHeight="25.0" prefWidth="49.0" text="0.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <Label text="Antibiotic" GridPane.rowIndex="3" />
             <Label text="Start area" GridPane.rowIndex="4" />
             <Label text="Zone 1" GridPane.rowIndex="5" />
@@ -66,14 +66,8 @@
             <TextField GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <TextField fx:id="firstZoneTextField" prefHeight="25.0" prefWidth="197.0" text="0.2" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <TextField fx:id="secondZoneTextField" text="0.4" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-            <TextField fx:id="thirdZoneTextField" text="0.6" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            <TextField fx:id="thirdZoneTextField" prefHeight="25.0" prefWidth="36.0" text="0.6" GridPane.columnIndex="1" GridPane.rowIndex="7" />
             <TextField fx:id="fourthZoneTextField" text="0.95" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-            <Label text="Alive Bacterias" GridPane.rowIndex="9" />
-            <Label fx:id="aliveBacteriasLabel" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-            <Label text="avg resistance" GridPane.rowIndex="10" />
-            <Label fx:id="avgResistanceLabel" prefHeight="17.0" prefWidth="92.0" text="0" GridPane.columnIndex="1" GridPane.rowIndex="10" />
-            <Label text="top resistance" GridPane.rowIndex="11" />
-            <Label fx:id="topResistanceLabel" prefHeight="17.0" prefWidth="54.0" GridPane.columnIndex="1" GridPane.rowIndex="11" />
          </children>
       </GridPane>
       <ToolBar layoutX="722.0" layoutY="350.0" prefHeight="35.0" prefWidth="273.0">
@@ -84,5 +78,55 @@
             <Button fx:id="continueButton" mnemonicParsing="false" onAction="#continueButtonEventHandler" text="Continue" />
         </items>
       </ToolBar>
+      <GridPane layoutX="874.0" layoutY="385.0" prefHeight="179.0" prefWidth="125.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="54.0" minWidth="10.0" prefWidth="21.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="104.0" minWidth="10.0" prefWidth="104.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label text="resistance &lt; 0.5" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label text="resistance &lt; 0.7" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label prefHeight="17.0" prefWidth="98.0" text="resistance &lt; 0.1" GridPane.columnIndex="1" />
+            <Label text="resistance &lt; 0.25" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label prefHeight="17.0" prefWidth="97.0" text="resistance &lt; 0.85" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label text="resistance &lt; 0.9" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: White;" />
+            <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: ANTIQUEWHITE;" GridPane.rowIndex="1" />
+            <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: BURLYWOOD;" GridPane.rowIndex="2" />
+            <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: CORAL;" GridPane.rowIndex="3" />
+            <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: CHOCOLATE;" GridPane.rowIndex="4" />
+            <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: GOLD;" GridPane.rowIndex="5" />
+            <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: LIME;" GridPane.rowIndex="6" />
+            <Label text="resistance &gt; 0.9" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+         </children>
+      </GridPane>
+      <GridPane layoutX="874.0" layoutY="573.0" prefHeight="82.0" prefWidth="125.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="101.0" minWidth="10.0" prefWidth="81.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="58.0" minWidth="10.0" prefWidth="44.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label text="Alive Bacterias" />
+            <Label text="avg resistance" GridPane.rowIndex="1" />
+            <Label text="top resistance" GridPane.rowIndex="2" />
+            <Label fx:id="avgResistanceLabel" prefHeight="17.0" prefWidth="92.0" text="0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label fx:id="topResistanceLabel" prefHeight="17.0" prefWidth="54.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label fx:id="aliveBacteriasLabel" GridPane.columnIndex="1" />
+         </children>
+      </GridPane>
    </children>
 </AnchorPane>

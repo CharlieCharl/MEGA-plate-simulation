@@ -1,6 +1,7 @@
 package plate;
 import bacteria.Bacteria;
 import bacteria.Direction;
+import utilities.Util;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -11,16 +12,16 @@ public class Plate {
     private int height;
     private Field[][] fields;
     private  List<Bacteria> bacteriasToAdd;
-    private List<Bacteria> deadbacterias;
     private int fixFood;
+    private Random random;
 
     public Plate(int width, int height) {
+        this.random = new Random();
         this.aliveBacterias = new ArrayList<>();
         this.width = width;
         this.height = height;
         this.fields = new Field[width][height];
         this.bacteriasToAdd = new ArrayList<>();
-        this.deadbacterias = new ArrayList<>();
 
         for (int i = 0; i < this.width; i++){
             for (int j = 0; j < this.height; j++){
@@ -94,7 +95,7 @@ public class Plate {
         this.fixFood = hunger;
     }
 
-    public void setBacteriasToaddHunger(int hunger){
+    public void setBacteriasToAddHunger(int hunger){
         bacteriasToAdd.forEach(bacteria -> bacteria.setHunger(hunger));
     }
 
@@ -108,8 +109,7 @@ public class Plate {
         Random random = new Random();
         aliveBacterias.forEach(bacteria -> {
             double deathProbability = random.nextDouble();
-            if(deathProbability < 0.00001f){
-                //  System.out.println(deathProbability + " trup");
+            if(deathProbability < 0.00005f){
                 bacteria.setAlive(false);
             }
         });
@@ -181,43 +181,63 @@ public class Plate {
         }
     }
 
-    private void bacteriaReproduce(Bacteria bacteria, List<Direction> avalibleDirections) {
-        if (!avalibleDirections.isEmpty()) {
-            int direction = new Random().nextInt(avalibleDirections.size());
+    private void bacteriaReproduce(Bacteria bacteria, List<Direction> availableDirections) {
+        if (!availableDirections.isEmpty()) {
+            int direction = new Random().nextInt(availableDirections.size());
             Bacteria tempBacteria = null;
-            switch (avalibleDirections.get(direction)) {
+            double resistance = calculateChildResistance(bacteria);
+
+          //  System.out.println("Parent: " + bacteria.getResistance() + " Child: " + resistance );
+            switch (availableDirections.get(direction)) {
                 case UP:
-                    tempBacteria = new Bacteria(bacteria);
+                    tempBacteria = new Bacteria(bacteria,resistance);
                     tempBacteria.setY(bacteria.getY() - 1);
                     break;
                 case LEFT:
-                    tempBacteria = new Bacteria(bacteria);
+                    tempBacteria = new Bacteria(bacteria,resistance);
                     tempBacteria.setX(bacteria.getX() - 1);
                     break;
                 case RIGHT:
-                    tempBacteria = new Bacteria(bacteria);
+                    tempBacteria = new Bacteria(bacteria,resistance);
                     tempBacteria.setX(bacteria.getX() + 1);
                     break;
                 case DOWN:
-                    tempBacteria = new Bacteria(bacteria);
+                    tempBacteria = new Bacteria(bacteria,resistance);
                     tempBacteria.setY(bacteria.getY() + 1);
                     break;
             }
             fields[tempBacteria.getX()][tempBacteria.getY()].setBacteria(tempBacteria);
             bacteriasToAdd.add(tempBacteria);
-            setBacteriasToaddHunger(fixFood);
+            setBacteriasToAddHunger(fixFood);
         }
     }
 
-    private void prepareAvailableDirectionsForBacteria(Bacteria bacteria, List<Direction> avalibleDirections) {
+    private double calculateChildResistance(Bacteria bacteria){
+       double resistance = 0;
+       do{
+         resistance = random.nextGaussian() * Util.populationStandardDeviation(convertArrayListOfResistanceToArray()) + bacteria.getResistance();
+       } while (resistance > 1.0d || resistance < 0.0d);
+
+        return resistance;
+    }
+
+    private double[] convertArrayListOfResistanceToArray(){
+        double[] resistance = new double[aliveBacterias.size()];
+        for (int i = 0; i < resistance.length; i++) {
+            resistance[i] = aliveBacterias.get(i).getResistance();
+        }
+        return resistance;
+    }
+
+    private void prepareAvailableDirectionsForBacteria(Bacteria bacteria, List<Direction> availableDirections) {
         if(isFieldEmpty(bacteria.getX(), bacteria.getY() - 1)){
-            avalibleDirections.add(Direction.UP); }
+            availableDirections.add(Direction.UP); }
         if(isFieldEmpty(bacteria.getX() + 1, bacteria.getY())) {
-            avalibleDirections.add(Direction.RIGHT); }
+            availableDirections.add(Direction.RIGHT); }
         if(isFieldEmpty(bacteria.getX(), bacteria.getY() + 1)) {
-            avalibleDirections.add(Direction.DOWN); }
+            availableDirections.add(Direction.DOWN); }
         if(isFieldEmpty(bacteria.getX() - 1, bacteria.getY())) {
-            avalibleDirections.add(Direction.LEFT); }
+            availableDirections.add(Direction.LEFT); }
     }
 
     public Field[][] getFields() {
@@ -241,7 +261,6 @@ public class Plate {
         }
             return topResistance;
     }
-
 
     public List<Bacteria> getAliveBacterias() {
         return aliveBacterias;
