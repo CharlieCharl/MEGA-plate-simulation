@@ -19,19 +19,23 @@ public class Bacteria{
         this.y = y;
         //this.resistance = 0.01f;
         this.resistance = ThreadLocalRandom.current().nextDouble(0.01,0.09);
-    //   this.resistance = ThreadLocalRandom.current().nextGaussian() + 0.01f;
-//        while (this.resistance < 0 || this.resistance > 1.0){
-//        this.resistance = ThreadLocalRandom.current().nextGaussian() + 0.5f;}
         this.hunger = 35;
     }
 
-    public Bacteria(Bacteria parent,double resistance){
+    public Bacteria(Bacteria parent,double resistance, boolean evolve){
         this.x = parent.getX();
         this.y = parent.getY();
         //this.resistance = parent.getResistance() + (ThreadLocalRandom.current().nextDouble(-0.03f,0.03f) );
-        this.resistance = resistance;
-       // while (this.resistance < 0 || this.resistance > 1.0){
-        //    this.resistance = parent.getResistance() + (ThreadLocalRandom.current().nextDouble(-0.03f,0.03f) );}
+        if(evolve){
+            this.resistance = resistance;
+            if (this.resistance > 1.0)
+                this.resistance = 1.0d;
+        }
+        if(!evolve){
+            do {
+                this.resistance = parent.getResistance() + (ThreadLocalRandom.current().nextDouble(-0.01f,0.015f));
+            }while (this.resistance > 1);
+        }
         this.hunger = 35;
     }
 

@@ -131,7 +131,10 @@ public class MainWindowController extends AnimationTimer {
         if (bacteria.getResistance() < 0.9) {
             return Color.GOLD;
         }
-        else return Color.LIME;
+        if (bacteria.getResistance() < 0.95) {
+            return Color.LIME;
+        }
+        else return Color.AQUAMARINE;
     }
 
     private void updateValues(){
