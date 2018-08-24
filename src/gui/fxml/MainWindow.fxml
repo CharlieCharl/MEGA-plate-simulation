@@ -29,7 +29,7 @@
           <NumberAxis side="LEFT" />
         </yAxis>
       </LineChart>
-      <GridPane layoutX="722.0" layoutY="385.0" prefHeight="360.0" prefWidth="144.0">
+      <GridPane layoutX="722.0" layoutY="385.0" prefHeight="268.0" prefWidth="144.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="179.0" minWidth="10.0" prefWidth="109.0" />
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="161.0" minWidth="10.0" prefWidth="43.0" />
@@ -44,16 +44,13 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <Label text="Bacteria's hunger" />
             <Label text="Food per field" GridPane.rowIndex="1" />
             <Label text="Starting population" GridPane.rowIndex="2" />
-            <TextField fx:id="bacteriasHungerTextField" text="6" GridPane.columnIndex="1" />
-            <TextField fx:id="foodPerFieldTextField" prefWidth="82.0" text="12" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="bacteriasHungerTextField" text="15" GridPane.columnIndex="1" />
+            <TextField fx:id="foodPerFieldTextField" prefWidth="82.0" text="1" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <TextField fx:id="startingPopulationTextfield" text="10" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <TextField fx:id="startAreaTextField" prefHeight="25.0" prefWidth="49.0" text="0.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <Label text="Antibiotic" GridPane.rowIndex="3" />
@@ -64,10 +61,10 @@
             <Label text="zone 4" GridPane.rowIndex="8" />
             <TextField GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <TextField GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <TextField fx:id="firstZoneTextField" prefHeight="25.0" prefWidth="197.0" text="0.2" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <TextField fx:id="secondZoneTextField" text="0.45" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-            <TextField fx:id="thirdZoneTextField" prefHeight="25.0" prefWidth="36.0" text="0.71" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-            <TextField fx:id="fourthZoneTextField" text="0.91" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+            <TextField fx:id="firstZoneTextField" prefHeight="25.0" prefWidth="197.0" text="0.10" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <TextField fx:id="secondZoneTextField" text="0.41" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <TextField fx:id="thirdZoneTextField" prefHeight="25.0" prefWidth="36.0" text="0.89" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            <TextField fx:id="fourthZoneTextField" text="0.95" GridPane.columnIndex="1" GridPane.rowIndex="8" />
          </children>
       </GridPane>
       <ToolBar layoutX="722.0" layoutY="350.0" prefHeight="35.0" prefWidth="273.0">
@@ -131,5 +128,7 @@
             <Label fx:id="aliveBacteriasLabel" GridPane.columnIndex="1" />
          </children>
       </GridPane>
+      <Label layoutX="722.0" layoutY="671.0" text="Steps without food to reproduce" />
+      <TextField fx:id="reproduceWithoutFoodTextField" layoutX="902.0" layoutY="667.0" prefHeight="25.0" prefWidth="92.0" text="1000" />
    </children>
 </AnchorPane>

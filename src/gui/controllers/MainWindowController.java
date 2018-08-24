@@ -71,6 +71,9 @@ public class MainWindowController extends AnimationTimer {
     private TextField fourthZoneTextField;
 
     @FXML
+    private TextField reproduceWithoutFoodTextField;
+
+    @FXML
     private Label aliveBacteriasLabel;
 
     @FXML
@@ -141,6 +144,7 @@ public class MainWindowController extends AnimationTimer {
         int foodPerField = Integer.parseInt(foodPerFieldTextField.getText());
         int bacteriaHunger = Integer.parseInt(bacteriasHungerTextField.getText());
         int startBacterias = Integer.parseInt(startingPopulationTextfield.getText());
+        int reproduceWithoutFood = Integer.parseInt(reproduceWithoutFoodTextField.getText());
 
         float startAreaAntibiotic = Float.parseFloat(startAreaTextField.getText());
         float firstAreaAntibiotic = Float.parseFloat(firstZoneTextField.getText());
@@ -148,9 +152,11 @@ public class MainWindowController extends AnimationTimer {
         float thirdAreaAntibiotic = Float.parseFloat(thirdZoneTextField.getText());
         float fourthAreaAntibiotic = Float.parseFloat(fourthZoneTextField.getText());
 
+
         simulation.getPlate().setPlateFood(foodPerField);
         simulation.getPlate().generateFirstGenerationOfBacterias(startBacterias);
         simulation.getPlate().setBacteriasHunger(bacteriaHunger);
+        simulation.getPlate().setReproduceWithoutFood(reproduceWithoutFood);
         simulation.getPlate().setAntibioticArea(startAreaAntibiotic,1);
         simulation.getPlate().setAntibioticArea(firstAreaAntibiotic,2);
         simulation.getPlate().setAntibioticArea(secondAreaAntibiotic,3);

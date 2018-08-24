@@ -2,7 +2,6 @@ package plate;
 import bacteria.Bacteria;
 import bacteria.Direction;
 import utilities.Util;
-
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -15,8 +14,7 @@ public class Plate {
     private List<Bacteria> bacteriasToAdd;
     private int fixFood;
     private Random random;
-    private boolean evolve;
-    private int deadBacterias;
+    private int fixReproduceWithoutFood;
 
     public Plate(int width, int height) {
         this.random = new Random();
@@ -25,7 +23,6 @@ public class Plate {
         this.height = height;
         this.fields = new Field[width][height];
         this.bacteriasToAdd = new ArrayList<>();
-        this.evolve = false;
 
         for (int i = 0; i < this.width; i++) {
             for (int j = 0; j < this.height; j++) {
@@ -43,7 +40,7 @@ public class Plate {
     public void setAntibioticArea(float antibioticValue, int area) {
         switch (area) {
             case 1:
-                for (int i = 0; i < 110; i++) {
+                for (int i = 0; i <= 110; i++) {
                     for (int j = 0; j < this.height; j++) {
                         this.fields[i][j].setAntibiotic(antibioticValue);
                     }
@@ -56,13 +53,13 @@ public class Plate {
                 }
                 break;
             case 2:
-                for (int i = 110; i < 220; i++) {
+                for (int i = 111; i <= 220; i++) {
                     for (int j = 0; j < this.height; j++) {
                         this.fields[i][j].setAntibiotic(antibioticValue);
                     }
                 }
 
-                for (int i = 780; i < 890; i++) {
+                for (int i = 781; i <= 890; i++) {
                     for (int j = 0; j < this.height; j++) {
                         this.fields[i][j].setAntibiotic(antibioticValue);
                     }
@@ -70,13 +67,13 @@ public class Plate {
 
                 break;
             case 3:
-                for (int i = 220; i < 330; i++) {
+                for (int i = 221; i <= 330; i++) {
                     for (int j = 0; j < this.height; j++) {
                         this.fields[i][j].setAntibiotic(antibioticValue);
                     }
                 }
 
-                for (int i = 670; i < 780; i++) {
+                for (int i = 671; i <= 780; i++) {
                     for (int j = 0; j < this.height; j++) {
                         this.fields[i][j].setAntibiotic(antibioticValue);
                     }
@@ -84,20 +81,20 @@ public class Plate {
 
                 break;
             case 4:
-                for (int i = 330; i < 440; i++) {
+                for (int i = 331; i <= 440; i++) {
                     for (int j = 0; j < this.height; j++) {
                         this.fields[i][j].setAntibiotic(antibioticValue);
                     }
                 }
 
-                for (int i = 560; i < 670; i++) {
+                for (int i = 561; i <= 670; i++) {
                     for (int j = 0; j < this.height; j++) {
                         this.fields[i][j].setAntibiotic(antibioticValue);
                     }
                 }
                 break;
             case 5:
-                for (int i = 440; i < 560; i++) {
+                for (int i = 441; i <= 560; i++) {
                     for (int j = 0; j < this.height; j++) {
                         this.fields[i][j].setAntibiotic(antibioticValue);
                     }
@@ -105,15 +102,6 @@ public class Plate {
                 break;
         }
     }
-
-    private boolean canEvolve(){
-        if(deadBacterias > 10){
-            deadBacterias = 0;
-            return true;
-        }
-        return false;
-    }
-
 
     public void generateFirstGenerationOfBacterias(int startingBacterias) {
         for (int i = 0; i < startingBacterias; i++) {
@@ -139,6 +127,15 @@ public class Plate {
         bacteriasToAdd.forEach(bacteria -> bacteria.setHunger(hunger));
     }
 
+    public void setBacteriasToAddReproduceWithoutHunger(int fixReproduceWithoutFood){
+        bacteriasToAdd.forEach(bacteria -> bacteria.setStepsWithoutFoodToReproduce(fixReproduceWithoutFood));
+    }
+
+    public void setReproduceWithoutFood(int reproduceWithoutFood) {
+        aliveBacterias.forEach(bacteria -> bacteria.setStepsWithoutFoodToReproduce(reproduceWithoutFood));
+        this.fixReproduceWithoutFood = reproduceWithoutFood;
+    }
+
     private boolean isFieldEmpty(int x, int y){
         if(x < 0 || x > width - 1 || y < 0 || y > height -1){ return false; }
         if(fields[x][y].getBacteria() == null) { return true; }
@@ -149,7 +146,7 @@ public class Plate {
         Random random = new Random();
         aliveBacterias.forEach(bacteria -> {
             double deathProbability = random.nextDouble();
-            if(deathProbability < 0.000001f){
+            if(deathProbability < 0.000000001f){
                 bacteria.setAlive(false);
             }
         });
@@ -164,18 +161,15 @@ public class Plate {
         aliveBacterias.forEach(bacteria -> {
             List<Direction> avalibleDirections = new ArrayList<>();
             prepareAvailableDirectionsForBacteria(bacteria, avalibleDirections);
+            //System.out.println(bacteria);
 
-            //reproduce
             if(bacteria.canReproduce()){
                 bacteriaReproduce(bacteria, avalibleDirections);
-            }//move and eat
+            }
             else { bacteriaMoveAndEat(bacteria, avalibleDirections); }
 
-            if((fields[bacteria.getX()][bacteria.getY()].getAntibiotic() > bacteria.getResistance())){
-              //  System.out.println(bacteria);
+            if((fields[bacteria.getX()][bacteria.getY()].getAntibiotic() > bacteria.getResistance())) {
                 bacteria.setAlive(false);
-                deadBacterias++;
-               // fields[bacteria.getX()][bacteria.getY()].setBacteria(null);
             }
         });
     }
@@ -224,12 +218,10 @@ public class Plate {
     private void bacteriaReproduce(Bacteria bacteria, List<Direction> availableDirections) {
         if (!availableDirections.isEmpty()) {
            int direction = new Random().nextInt(availableDirections.size());
-            double resistance = 0;
-           do {
-               resistance = calculateChildResistance(bacteria);
-           }while (resistance > 1.0);
-           Bacteria tempBacteria = new Bacteria(bacteria,resistance,canEvolve());
-          //  System.out.println("Parent: " + bacteria.getResistance() + " Child: " + resistance );
+
+            double resistance = calculateChildResistance(bacteria);
+            Bacteria tempBacteria = new Bacteria(bacteria,resistance);
+            System.out.println("Parent: " + bacteria.getResistance() + " Child: " + resistance );
             switch (availableDirections.get(direction)) {
                 case UP:
                     tempBacteria.setY(bacteria.getY() - 1);
@@ -247,6 +239,7 @@ public class Plate {
             fields[tempBacteria.getX()][tempBacteria.getY()].setBacteria(tempBacteria);
             bacteriasToAdd.add(tempBacteria);
             setBacteriasToAddHunger(fixFood);
+            setBacteriasToAddReproduceWithoutHunger(fixReproduceWithoutFood);
         }
     }
 
@@ -257,9 +250,10 @@ public class Plate {
         for (int i = 0; i < resistanceTable.length; i++) {
             resistanceTable[i] = aliveBacterias.get(i).getResistance();
         }
+
        do{
-           resistance = random.nextGaussian() * (Util.populationStandardDeviation(resistanceTable)) + bacteria.getResistance();
-       } while (resistance > 1.0d);
+           resistance = random.nextGaussian() * (Util.populationStandardDeviation(resistanceTable)/2) + bacteria.getResistance();
+       } while (resistance > 1.0d || resistance < 0.0d);
 
         return resistance;
     }

@@ -3,6 +3,7 @@ package bacteria;
 
 import plate.Field;
 
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Bacteria{
@@ -13,30 +14,25 @@ public class Bacteria{
     private int hunger;
     private boolean alive;
     private int movesWithoutFood = 0;
+    private int stepsWithoutFoodToReproduce;
+    private int initialhunger;
+    private Random random;
 
     public Bacteria(int x, int y) {
         this.x = x;
         this.y = y;
-        //this.resistance = 0.01f;
         this.resistance = ThreadLocalRandom.current().nextDouble(0.01,0.09);
         this.hunger = 35;
+        random = new Random();
     }
 
-    public Bacteria(Bacteria parent,double resistance, boolean evolve){
+    public Bacteria(Bacteria parent,double resistance){
         this.x = parent.getX();
         this.y = parent.getY();
-        //this.resistance = parent.getResistance() + (ThreadLocalRandom.current().nextDouble(-0.03f,0.03f) );
-        if(evolve){
-            this.resistance = resistance;
-            if (this.resistance > 1.0)
-                this.resistance = 1.0d;
-        }
-        if(!evolve){
-            do {
-                this.resistance = parent.getResistance() + (ThreadLocalRandom.current().nextDouble(-0.01f,0.015f));
-            }while (this.resistance > 1);
-        }
+        this.resistance = resistance;
         this.hunger = 35;
+        this.movesWithoutFood = 0;
+        random = new Random();
     }
 
     public double getResistance() {
@@ -44,17 +40,27 @@ public class Bacteria{
     }
 
     public boolean canReproduce(){
-        if(this.hunger == 0){
-            this.hunger = 35;
+        double tryToReproduceChance = random.nextDouble();
+        if((this.hunger > 0 && this.movesWithoutFood >= stepsWithoutFoodToReproduce) && tryToReproduceChance < 0.00001f){
+            this.movesWithoutFood = 0;
             return true;
         }
+
+        if(this.hunger == 0){
+            this.hunger = initialhunger;
+            return true;
+        }
+
         return false;
     }
+
+
 
     public void eatFood(Field field){
         if(field.getFood() > 0){
             this.hunger--;
             field.removeFood();
+            this.movesWithoutFood = 0;
         } else this.movesWithoutFood++;
     }
 
@@ -76,6 +82,7 @@ public class Bacteria{
 
     public void setHunger(int hunger){
         this.hunger = hunger;
+        this.initialhunger = hunger;
     }
 
     @Override
@@ -85,6 +92,23 @@ public class Bacteria{
     public int getHunger() {
         return hunger;
     }
+
+    public void setResistance(double resistance) {
+        this.resistance = resistance;
+    }
+
+    public void setMovesWithoutFood(int movesWithoutFood) {
+        this.movesWithoutFood = movesWithoutFood;
+    }
+
+    public int getStepsWithoutFoodToReproduce() {
+        return stepsWithoutFoodToReproduce;
+    }
+
+    public void setStepsWithoutFoodToReproduce(int stepsWithoutFoodToReproduce) {
+        this.stepsWithoutFoodToReproduce = stepsWithoutFoodToReproduce;
+    }
+
 }
 
 
